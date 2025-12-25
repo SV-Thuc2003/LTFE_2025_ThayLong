@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next"; // Tạm ẩn i18n
 
 const OAuth2RedirectHandler = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { t } = useTranslation();
+  // const { t } = useTranslation(); // Code cũ
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -24,7 +24,8 @@ const OAuth2RedirectHandler = () => {
     }
   }, [location, navigate, login]);
 
-  return <div>{t("auth.oauth_processing")}</div>;
+  return <div>Đang xử lý đăng nhập...</div>;
+  // return <div>{t("auth.oauth_processing")}</div>; // Code cũ
 };
 
 export default OAuth2RedirectHandler;
