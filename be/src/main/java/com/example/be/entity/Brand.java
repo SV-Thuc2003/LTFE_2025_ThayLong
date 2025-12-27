@@ -18,16 +18,6 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
     private String name;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @OneToMany(mappedBy = "brand")
-    private Set<Product> products = new HashSet<>();
-
-    @Column(name = "logo_url")
-    private String logoUrl;
 }
 

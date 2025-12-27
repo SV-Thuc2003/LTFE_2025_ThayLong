@@ -16,30 +16,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class Category {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
     private String name;
-
-    @Column(unique = true)
     private String slug;
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    // Phân cấp parent-child
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_id")
-    @JsonBackReference
-    private Category parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Category> children = new HashSet<>();
-
-    @ManyToMany(mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
-
-    @Column(name = "image_url")
-    private String imageUrl;
 }

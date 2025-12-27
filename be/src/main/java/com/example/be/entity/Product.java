@@ -22,70 +22,32 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class Product {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
     private String name;
-
-    @Column(unique = true)
     private String slug;
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    @Column(nullable = false)
-    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    private BigDecimal price;
+
+    @Column(name = "product_url")
+    private String productUrl;
+
     @Column(columnDefinition = "TEXT")
-    private String feature;
-    @Column(nullable = false)
-    private Integer stock;
+    private String description;
 
-    @Enumerated(EnumType.STRING)
-    private ProductStatus status = ProductStatus.AVAILABLE;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ProductImage> images;
 
-    @Column(name = "is_featured")
-    private Boolean isFeatured = false;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
-    @UpdateTimestamp
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "product_type")
-    private ProductType productType;
-
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinTable(
-//            name = "category_mapping",
-//            joinColumns = @JoinColumn(name = "product_id"),
-//            inverseJoinColumns = @JoinColumn(name = "category_id")
-//    )
-//    private Set<Category> categories = new HashSet<>();
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "category_mapping",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> categories = new HashSet<>();
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private WaterPurifierDetail waterPurifierDetail;
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private FilterCartridgeDetail filterCartridgeDetail;
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private NonElectricPurifierDetail nonElectricPurifierDetail;
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PrefilterHousingDetail prefilterHousingDetail;
-
-    @BatchSize(size = 10)
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductDetail> details;
 }
