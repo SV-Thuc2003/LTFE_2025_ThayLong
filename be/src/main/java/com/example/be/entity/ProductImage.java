@@ -12,19 +12,16 @@ import lombok.*;
 @Builder
 
 public class ProductImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Integer id;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+        private String imageUrl;
 
-    @Column(name = "is_thumbnail")
-    private Boolean isThumbnail = false;
+        private Boolean isThumbnail = false;
 
-//    @ManyToMany
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+        @ManyToOne
+        @JoinColumn(name = "product_id")
+        private Product product;
 }
 

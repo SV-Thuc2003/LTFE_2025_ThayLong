@@ -7,24 +7,22 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class ProductRequest {
-    @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
     private String slug;
-    private String description;
+    private Integer brandId;
+    private Integer categoryId;
     private BigDecimal price;
-    private Integer brandId;               // Brand id thay vì String brand
-    private String feature;
-    private Integer stock;
-    private ProductStatus status;
-    private ProductType productType;
-    private List<Integer> categoryIds;
-    private ProductDetailRequest detail;  // Base class/interface cho các loại detail
-    private List<String> imageUrls;
-    private String thumbnailUrl;
-    private Boolean isFeatured;
+    private String productUrl;
+    private String description;
+
+    // Optional: gửi details và images khi tạo sản phẩm
+    private Map<String, String> details; // key: attribute, value: value
+    private List<String> images; // danh sách URL ảnh
 }
 
