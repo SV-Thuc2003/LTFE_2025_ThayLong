@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { CartItem } from "../types/Cart";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -14,7 +14,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const userId = localStorage.getItem("userId");
