@@ -34,4 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
     // Filter category
     @EntityGraph(attributePaths = {"images", "brand"})
     Page<Product> findByCategory_Slug(String slug, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"images"})
+    List<Product> findTop5ByNameContainingIgnoreCase(String keyword);
 }

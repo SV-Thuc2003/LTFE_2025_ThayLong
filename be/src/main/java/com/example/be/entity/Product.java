@@ -46,8 +46,8 @@ public class Product {
     private String description;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ProductImage> images;
+    private Set<ProductImage> images;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductDetail> details;
+    private Set<ProductDetail> details;
 }
