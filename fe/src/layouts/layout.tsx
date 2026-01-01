@@ -1,5 +1,6 @@
 import  Header  from "../components/layout/header/Header";
 import  Footer  from "../components/layout/footer/Footer";
+import  ChatBox  from "../components/ChatBox";
 import { Outlet } from "react-router-dom";
 
 export const Layout = () => {
@@ -13,6 +14,7 @@ export const Layout = () => {
       </main>
 
       <Footer />
+      <ChatBox />
     </div>
   );
 };
