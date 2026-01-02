@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,6 +68,8 @@ public class Product_MilkServiceImpl implements ProductService {
     public ProductDetailResponse getProductDetail(String slug) {
         var product = productRepository.findBySlug(slug)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        return productMapper.toDetail(product, product.getDetails());
+
+        return productMapper.toDetail(product, new ArrayList<>(product.getDetails()));
     }
+
 }

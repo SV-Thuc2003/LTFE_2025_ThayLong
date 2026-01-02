@@ -30,10 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <div className={`flex flex-col gap-y-1 ${className}`}>
       {label && (
-        <label
-          htmlFor={name}
-          className="text-lg font-medium text-black mb-1"
-        >
+        <label htmlFor={name} className="text-lg font-medium text-black mb-1">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>

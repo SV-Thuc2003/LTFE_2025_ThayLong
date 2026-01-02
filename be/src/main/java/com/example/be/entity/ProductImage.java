@@ -18,7 +18,8 @@ public class ProductImage {
 
         private String imageUrl;
 
-        private Boolean isThumbnail = false;
+        @Column(nullable = false)
+        private Boolean isThumbnail;
 
         @ManyToOne
         @JoinColumn(name = "product_id")

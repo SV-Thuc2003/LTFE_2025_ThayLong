@@ -1,29 +1,37 @@
-// src/components/home/CategoryList.tsx
-import React from "react";
 import { Link } from "react-router-dom";
 
 const categories = [
-  { name: "Sữa bột", href: "/category/sua-bot" },
-  { name: "Sữa cho bé", href: "/category/cho-be" },
-  { name: "Sữa cho mẹ", href: "/category/cho-me" },
-  { name: "Khuyến mãi", href: "/category/sale" },
+  { name: "Tất cả sữa bột", slug: "" },
+  { name: "Sữa bột cho bé", slug: "sua-bot-cho-be" },
+  { name: "Sữa bột cho người lớn", slug: "sua-bot-cho-nguoi-lon" },
+  { name: "Khuyến mãi", slug: "sale" },
 ];
 
-const CategoryList: React.FC = () => (
-  <section className="container mx-auto px-6 lg:px-0">
-    <h2 className="text-2xl font-semibold mb-6">Danh mục sản phẩm</h2>
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {categories.map((cat) => (
-        <Link
-          to={cat.href}
-          key={cat.name}
-          className="p-4 text-center bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-        >
-          {cat.name}
-        </Link>
-      ))}
-    </div>
-  </section>
-);
+const CategoryList = () => {
+  return (
+    <section className="max-w-7xl mx-auto px-4">
+      <h2 className="text-2xl font-semibold mb-6">
+        Danh mục sữa bột
+      </h2>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {categories.map((cat) => (
+          <Link
+            key={cat.name}
+            to={cat.slug ? `/products/${cat.slug}` : "/products"}
+            className="
+              bg-white border rounded-lg px-4 py-6
+              text-center font-medium
+              hover:border-blue-500 hover:text-blue-600
+              hover:shadow-sm transition
+            "
+          >
+            {cat.name}
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default CategoryList;

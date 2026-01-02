@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import InputField from "../../../components/ui/InputField";
-import Button from "../../../components/ui/Button";
-import Checkbox from "../../../components/ui/Checkbox";
+import InputField from "../../../components/common/InputField";
+import Button from "../../../components/common/Button";
+import Checkbox from "../../../components/common/Checkbox";
 import { login } from "../../../Service/authService";
 // import { LoginCredentials } from "../../../types/Login"; // Code cũ gây lỗi
 
@@ -31,7 +31,8 @@ const LoginForm: React.FC = () => {
         try {
             const response = await login({ username, password });
             if (contextLogin) {
-                contextLogin(response.userId, response.username, response.token, response.role);
+                // contextLogin(response.userId, response.username, response.token, response.role);
+                contextLogin(response.username, response.token, response.role);
                 navigate("/");
             }
         } catch (error: any) {

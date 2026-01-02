@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Stepper from "../../components/ui/Stepper";
+import Stepper from "../../components/common/Stepper";
 import RegistrationForm from "../../features/auth/register/RegistrationForm";
 import Illustration from "../../features/auth/register/Illustration";
 import OtpVerification from "../../features/auth/register/OtpInput";
