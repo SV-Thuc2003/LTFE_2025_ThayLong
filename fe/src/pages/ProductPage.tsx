@@ -1,7 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import ProductList from "../components/product/ProductList";
-import Breadcrumb from "../components/common/Breadcrumb";
+// import Breadcrumbs, { BreadcrumbItem } from "../components/common/Breadcrumb";
+// import default bình thường
+import Breadcrumbs from "../components/common/Breadcrumb";
+
+// import type riêng
+import type { BreadcrumbItem } from "../components/common/Breadcrumb";
+
 import ProductFilter from "../components/product/ProductFilter";
 import { CATEGORY_MAP } from "../constants/categories";
 import type { ProductSort } from "../types/product-sort";
@@ -18,10 +24,18 @@ const ProductPage = () => {
   const [maxPrice, setMaxPrice] = useState<number>();
   const [sort, setSort] = useState<ProductSort>("newest");
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: "Trang chủ", path: "/" },
+    { label: "Sữa bột", path: "/products" },
+  ];
+
+  if (categoryName) {
+    breadcrumbItems.push({ label: categoryName });
+  }
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* BREADCRUMB */}
-      <Breadcrumb categoryName={categoryName} />
+      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="flex gap-6">
         {/* SIDEBAR FILTER */}
