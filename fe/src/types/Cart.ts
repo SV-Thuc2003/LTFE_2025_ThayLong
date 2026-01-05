@@ -1,14 +1,11 @@
 // types/Cart.ts
+import type { ProductListResponse } from "./product-response.ts";
 
 export interface CartItem {
   id: number;
-  productId: number;
-  name: string;
-  slug: string;
-  price: number;
-
-  thumbnail: string;
   quantity: number;
+
+  product: ProductListResponse;
 }
 
 export interface PromoCode {
