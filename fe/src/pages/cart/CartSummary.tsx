@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../../components/ui/Button';
+import Button from '../../components/Button';
 import { useTranslation } from 'react-i18next';
 
 interface CartSummaryProps {

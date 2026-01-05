@@ -8,6 +8,7 @@ import RegisterPage from "../pages/register/index";
 import { Route, Routes } from 'react-router-dom';
 import ProductDetailPage from "../pages/ProductDetailPage";
 import ProductPage from "../pages/ProductPage";
+import CartCheckOut from "../pages/cart";
 
 const AppRoutes =() => {
     return (
@@ -21,8 +22,8 @@ const AppRoutes =() => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path='/register' element={<RegisterPage/>}/>
                 {/* <Route path='/product' element={<Products/>}/> */}
+                <Route path="/cart" element={<CartCheckOut />} />
             </Route>
-            
         </Routes>
     );
 };

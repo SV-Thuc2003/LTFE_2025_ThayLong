@@ -1,12 +1,15 @@
+// types/Cart.ts
+
 export interface CartItem {
   id: number;
   productId: number;
   name: string;
+  slug: string;
   price: number;
-  quantity: number;
-  thumbnail: string; // 👈 thêm dòng này
-}
 
+  thumbnail: string;
+  quantity: number;
+}
 
 export interface PromoCode {
   code: string;

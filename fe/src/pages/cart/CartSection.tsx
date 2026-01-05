@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductItem from './ProductItem';
-import Button from '../../components/ui/Button';
+import Button from '../../components/Button';
 import type { CartItem } from '../../types/Cart';
 import { useTranslation } from 'react-i18next';
 
