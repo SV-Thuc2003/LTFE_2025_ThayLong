@@ -44,53 +44,49 @@ public class ChatService {
         };
     }
     private ChatResponseDTO handleSearchProduct(String message) {
+        // Lọc từ khóa, bỏ các từ dư thừa
+        String keyword = message.replaceAll("(mua|cho|bé|tuổi|mình|muốn)", "").trim();
 
-        String keyword = message.replaceAll(
-                "(mua|cho|bé|tuổi|mình|muốn)", ""
-        ).trim();
-
-        List<ProductChatResponseDTO> products =
-                productRepository.findTop5ByNameContainingIgnoreCase(keyword)
-                        .stream()
-                        .map(p -> new ProductChatResponseDTO(
-                                p.getName(),
-                                p.getSlug(),
-                                p.getPrice().toString(),
-                                p.getImages().stream()
-                                        .filter(ProductImage::getIsThumbnail)
-                                        .findFirst()
-                                        .map(ProductImage::getImageUrl)
-                                        .orElse("")
-                        ))
-                        .toList();
+        // Tìm top 5 sản phẩm chứa keyword
+        List<ProductChatResponseDTO> products = productRepository.findTop5ByNameContainingIgnoreCase(keyword)
+                .stream()
+                .map(p -> new ProductChatResponseDTO(
+                        p.getName(),
+                        p.getSlug(),
+                        p.getPrice().toString(),
+                        p.getImages().stream()
+                                .filter(ProductImage::getIsThumbnail)
+                                .findFirst()
+                                .map(ProductImage::getImageUrl)
+                                .orElse("")
+                ))
+                .toList();
 
         if (products.isEmpty()) {
             return new ChatResponseDTO(
                     "BOT",
-                    "Hiện chưa có sản phẩm phù hợp ",
+                    "Hiện chưa có sản phẩm sữa phù hợp với từ khóa của bạn.",
                     List.of()
             );
         }
 
         return new ChatResponseDTO(
                 "BOT",
-                "Mình tìm thấy các sản phẩm sau cho bạn:",
+                "Mình tìm thấy các sản phẩm sữa sau cho bạn:",
                 products
         );
     }
 
-    private ChatIntent detectIntent(String message){
+    private ChatIntent detectIntent(String message) {
         String msg = message.toLowerCase();
-        if (msg.contains("Chào") || msg.contains("Hi")){
-            return ChatIntent.GREETING;
-        }
-        if (msg.contains("giá") || msg.contains("bao nhiêu")){
-            return ChatIntent.ASK_PRICE;
-        }
-        if (msg.contains("sữa") || msg.contains("sưaxx")){
-            return ChatIntent.SEARCH_PRODUCT;
-        }
-            return ChatIntent.UNKNOWN;
 
+        if (msg.contains("chào") || msg.contains("hi")) return ChatIntent.GREETING;
+
+        if (msg.contains("sữa")) return ChatIntent.SEARCH_PRODUCT;
+
+        if (msg.contains("giá") || msg.contains("bao nhiêu")) return ChatIntent.ASK_PRICE;
+
+        return ChatIntent.UNKNOWN;
     }
+
 }
