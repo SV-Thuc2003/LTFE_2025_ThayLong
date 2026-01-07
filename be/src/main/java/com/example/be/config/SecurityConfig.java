@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/api/auth/**", "/oauth2/**").permitAll()
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/brands/**", "/api/categories/**").permitAll()
+                                .requestMatchers("/ws-chat/**").permitAll()
 //                                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/**").permitAll()
 //                        .requestMatchers("/api/customers/**").hasRole("USER")

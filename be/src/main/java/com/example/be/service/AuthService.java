@@ -61,9 +61,9 @@ public class AuthService {
         user.setOtpCode(otp);
         user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
 
-        UserRoles defaultRole = userRoleRepository.findByRoleName(RoleName.USER)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-        user.setRoles(Collections.singleton(defaultRole));
+//        UserRoles defaultRole = userRoleRepository.findByRoleName(RoleName.USER)
+//                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+//        user.setRoles(Collections.singleton(defaultRole));
         userRepository.save(user);
 
         emailService.sendOtpEmail(request.getEmail(), otp);
@@ -133,6 +133,31 @@ public class AuthService {
      * @param request thông tin đăng nhập
      * @return LoginResponse bao gồm token, username, role
      */
+//    public LoginResponse login(LoginRequest request) {
+//        User user = userRepository.findByUsername(request.getUsername())
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new AppException(ErrorCode.INVALID_PASSWORD);
+//        }
+//
+//        if (!user.getIsVerified()) {
+//            throw new AppException(ErrorCode.USER_NOT_VERIFIED);
+//        }
+//
+//        if(user.getStatus() == Status.BANNED) {
+//            throw new AppException(ErrorCode.USER_BANNED);
+//        }
+//
+//        // Lấy role (giả sử chỉ có 2 role
+//        String role = user.getRoles().stream().findFirst()
+//                .map(r -> r.getRoleName().name())
+//                .orElse("USER");
+//        // Tạo JWT token
+//        String token = jwtService.generateToken(user.getEmail(), user.getId());
+//
+//        return new LoginResponse(token, user.getUsername(), role, user.getId()); // 👈 thêm user.getId()
+//    }
+
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -148,15 +173,12 @@ public class AuthService {
             throw new AppException(ErrorCode.USER_BANNED);
         }
 
-        // Lấy role (giả sử chỉ có 2 role
-        String role = user.getRoles().stream().findFirst()
-                .map(r -> r.getRoleName().name())
-                .orElse("USER");
         // Tạo JWT token
         String token = jwtService.generateToken(user.getEmail(), user.getId());
 
-        return new LoginResponse(token, user.getUsername(), role, user.getId()); // 👈 thêm user.getId()
+        return new LoginResponse(token, user.getUsername(), user.getId()); // 👈 bỏ role
     }
+
 
     public UserProfileResponse getProfile(Integer userId) {
         User user = userRepository.findById(userId)
