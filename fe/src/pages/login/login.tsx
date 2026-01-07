@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import logologin from "../../assets/logologin.jpg";
-import Header from "../../components/common/Header";
+import Header from "../../components/layout/header/Header";
 import LoginForm from "../../features/auth/login/LoginForm.tsx";
 import SocialLogin from "../../features/auth/login/SocialLogin.tsx";
 

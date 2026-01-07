@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputField from "../../../components/ui/InputField";
-import Button from "../../../components/ui/Button";
+import InputField from "../../../components/common/InputField";
+import Button from "../../../components/Button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { resetPassword } from "../../../Service/authService";

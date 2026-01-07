@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Stepper from "../../../components/ui/Stepper";
+import Stepper from "../../../components/common/Stepper";
 import StepEmail from "./StepEmail";
 import StepOtp from "./StepOtp";
 import StepNewPassword from "./StepNewPassword";
@@ -18,7 +18,6 @@ const ForgotPassword: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
-  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const handleNext = () => setCurrentStep((prev) => prev + 1);
   const handlePrev = () => setCurrentStep((prev) => prev - 1);
@@ -42,7 +41,6 @@ const ForgotPassword: React.FC = () => {
               email={email}
               setEmail={setEmail}
               onSuccess={() => {
-                setIsEmailSent(true);
                 handleNext();
               }}
             />

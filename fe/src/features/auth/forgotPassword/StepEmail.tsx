@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputField from "../../../components/ui/InputField";
-import Button from "../../../components/ui/Button";
+import InputField from "../../../components/common/InputField";
+import Button from "../../../components/common/Button";
 import { toast } from "react-toastify";
 import { forgotPassword } from "../../../Service/authService"; // import hàm dùng chung
 import { useTranslation } from 'react-i18next';
