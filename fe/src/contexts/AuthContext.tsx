@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
-  userId: number | null;
+  // userId: number | null;
   username: string | null;
   token: string | null;
   role: string | null;
   isLoggedIn: boolean;
   isLoading: boolean;
-  login: (userId: number, username: string, token: string, role: string) => void;
+  login: (username: string, token: string, role: string) => void;
+  // login: (userId: number, username: string, token: string, role: string) => void;
   logout: () => void;
 }
 
@@ -34,8 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, []);
 
-  const login = (userId: number, username: string, token: string, role: string) => {
-    localStorage.setItem('userId', String(userId));
+  // const login = (userId: number, username: string, token: string, role: string) => {
+  const login = (username: string, token: string, role: string) => {
+    // localStorage.setItem('userId', String(userId));
+    
     localStorage.setItem('username', username);
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
@@ -59,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
       <AuthContext.Provider
           value={{
-            userId,
+            // userId,
             username,
             token,
             role,

@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -15,17 +16,12 @@ public class ProductResponse {
     private Integer id;
     private String name;
     private String slug;
-    private String description;
+    private String brandName;
+    private String categoryName;
     private BigDecimal price;
-    private String brand;                   // Brand name
-    private String feature;
-    private Integer stock;
-    private ProductStatus status;
-    private ProductType productType;
-    private List<String> categories;
-    private List<String> imageUrls;
-    private String thumbnailUrl;
-    private ProductDetailResponse detail;
-    private Boolean isFeatured;
+    private String productUrl;
+    private String description;
+    private List<String> images;
+    private Map<String, String> details;
 }
 

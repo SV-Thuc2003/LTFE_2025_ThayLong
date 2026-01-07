@@ -1,22 +1,36 @@
 // src/pages/Home.tsx
-import Hero from './Hero';
-import CategoryList from './CategoryList';
-import ProductGrid from './ProductGrid';
+import CategoryList from "./CategoryList";
+import Hero from "./Hero";
+import ProductList from "../../components/product/ProductList";
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
-    <div className="space-y-16">
+    <div className="max-w-7xl mx-auto px-4">
       <Hero />
 
-      {/* Categories */}
-      <CategoryList />
+      <section className="my-8">
+        <CategoryList />
+      </section>
 
-      {/* Example product lists */}
-      <ProductGrid title="Sản phẩm bán chạy" />
+      {/* Sữa bột cho bé */}
+      <section className="my-10">
+        <h2 className="text-2xl font-semibold mb-4">Sữa bột cho bé</h2>
+        <ProductList
+          categorySlug="sua-bot-cho-be"
+          pageSize={8}
+          showPagination={false}
+        />
+      </section>
 
-      <ProductGrid title="Sữa bột cho bé" />
-
-      <ProductGrid title="Sữa cho người lớn" />
+      {/* Sữa bột cho người lớn */}
+      <section className="my-10">
+        <h2 className="text-2xl font-semibold mb-4">Sữa bột cho người lớn</h2>
+        <ProductList
+          categorySlug="sua-bot-cho-nguoi-lon"
+          pageSize={8}
+          showPagination={false}
+        />
+      </section>
     </div>
   );
 };
