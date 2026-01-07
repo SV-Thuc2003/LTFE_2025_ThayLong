@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
             const response = await login({ username, password });
             if (contextLogin) {
                 // contextLogin(response.userId, response.username, response.token, response.role);
-                contextLogin(response.username, response.token, response.role);
+                contextLogin(response.username, response.token);
                 navigate("/");
             }
         } catch (error: any) {
@@ -70,7 +70,7 @@ const LoginForm: React.FC = () => {
                 <button
                     type="button"
                     onClick={() => navigate("/forgot-password")}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-rose-600 hover:underline"
                 >
                     Quên mật khẩu?
                 </button>
@@ -84,6 +84,7 @@ const LoginForm: React.FC = () => {
                 {isLoading ? "Đang xử lý..." : "Đăng nhập"}
             </Button>
         </form>
+        
     );
 };
 

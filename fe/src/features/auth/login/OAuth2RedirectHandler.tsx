@@ -13,11 +13,12 @@ const OAuth2RedirectHandler = () => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
     const username = params.get("username");
-    const role = params.get("role");
+    // const role = params.get("role");
     const userId = params.get("userId");
 
-    if (token && username && role && userId) {
-      login(parseInt(userId), username, token, role);
+    if (token && username && userId) {
+      // login(parseInt(userId), username, token);
+       login(username, token);
       navigate("/");
     } else {
       navigate("/login?error=missing_token");
