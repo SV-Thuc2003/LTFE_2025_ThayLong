@@ -4,10 +4,9 @@ interface AuthContextType {
   // userId: number | null;
   username: string | null;
   token: string | null;
-  role: string | null;
   isLoggedIn: boolean;
   isLoading: boolean;
-  login: (username: string, token: string, role: string) => void;
+  login: (username: string, token: string) => void;
   // login: (userId: number, username: string, token: string, role: string) => void;
   logout: () => void;
 }
@@ -15,10 +14,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [userId, setUserId] = useState<number | null>(null);
+  // const [userId, setUserId] = useState<number | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -27,36 +25,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = localStorage.getItem('token');
     const storedRole = localStorage.getItem('role');
 
-    if (storedUserId) setUserId(Number(storedUserId));
+    // if (storedUserId) setUserId(Number(storedUserId));
     if (storedUsername) setUsername(storedUsername);
     if (storedToken) setToken(storedToken);
-    if (storedRole) setRole(storedRole);
-
     setIsLoading(false);
   }, []);
 
   // const login = (userId: number, username: string, token: string, role: string) => {
-  const login = (username: string, token: string, role: string) => {
+  const login = (username: string, token: string) => {
     // localStorage.setItem('userId', String(userId));
     
     localStorage.setItem('username', username);
     localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
-    setUserId(userId);
+    // setUserId(userId);
     setUsername(username);
     setToken(token);
-    setRole(role);
   };
 
   const logout = () => {
-    localStorage.removeItem('userId');
+    // localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    setUserId(null);
+   
+    // setUserId(null);
     setUsername(null);
     setToken(null);
-    setRole(null);
   };
 
   return (
@@ -65,7 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // userId,
             username,
             token,
-            role,
             isLoggedIn: !!token,
             isLoading,
             login,
