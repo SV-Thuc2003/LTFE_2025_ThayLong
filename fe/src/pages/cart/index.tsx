@@ -76,7 +76,6 @@ const CartCheckOut: React.FC = () => {
                     quantity: item.quantity || 1,
                     productId: item.productId || item.product?.id,
 
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     product: {
                         id: item.productId || item.product?.id,
                         name: item.productName || item.name || item.product?.name || "Sản phẩm",
@@ -132,11 +131,6 @@ const CartCheckOut: React.FC = () => {
         );
     };
 
-    const handleUpdateCart = async () => {
-        console.log("Updating cart...", cartItems);
-        alert("Đã cập nhật giỏ hàng!");
-    };
-
     const handleContinueShopping = () => { navigate("/products"); };
     const handleApplyPromoCode = (code: string) => { console.log(code); };
     const handleProceedToCheckout = () => { navigate("/checkout"); };
@@ -154,7 +148,6 @@ const CartCheckOut: React.FC = () => {
                             cartItems={cartItems}
                             onRemoveItem={handleRemoveItem}
                             onQuantityChange={handleQuantityChange}
-                            onUpdateCart={handleUpdateCart}
                             onContinueShopping={handleContinueShopping}
                         />
                     </div>
