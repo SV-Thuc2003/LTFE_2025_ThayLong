@@ -1,5 +1,8 @@
-import { createContext } from "react";
-import type { CartItem } from "../types/Cart";
+<<<<<<< ngovan
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+import type { CartItem } from "../types/cart";
+
 
 export interface CartContextType {
   cartItems: CartItem[];

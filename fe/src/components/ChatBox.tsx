@@ -6,6 +6,8 @@ const ChatBox = () => {
   const { messages, sendMessage } = useChat();
   const [input, setInput] = useState("");
 
+  return null;
+
   const handleSend = () => {
     if (!input.trim()) return;
     sendMessage(input);
