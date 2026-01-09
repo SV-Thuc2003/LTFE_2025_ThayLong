@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = "text-xl font-medium rounded-lg flex items-center justify-center cursor-pointer";
 
   const variantStyles = {
-    primary: "bg-blue-400 text-white border border-blue-400 font-bold",
+    primary: "bg-rose-600 text-white border border-rose-700 font-bold",
     outline: "border border-[#d9d9d9] text-black",
     social: "border border-[#d9d9d9] text-black",
     secondary: "bg-gray -200 text-black hover:bg-gray-300"
