@@ -1,5 +1,5 @@
 import React from 'react';
-import InputField from '../../components/ui/InputField';
+import InputField from '../../components/common/InputField';
 import { useTranslation } from 'react-i18next';
 
 interface PaymentMethodFormProps {

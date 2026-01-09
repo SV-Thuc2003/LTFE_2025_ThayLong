@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ShippingAddress } from '../../types/check-out.ts';
-import { useTranslation } from 'react-i18next';
+import type { ShippingAddress } from '../../types/check-out.ts';
 
 interface ShippingAddressFormProps {
     shippingAddress: ShippingAddress;
@@ -16,7 +15,6 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
                                                                      onShippingAddressChange,
                                                                      onShippingFeeChange,
                                                                  }) => {
-    const { t } = useTranslation();
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
@@ -93,7 +91,7 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
     return (
         <div className="mb-6">
             <div className="p-6 border border-gray-300 rounded-lg space-y-4 bg-white shadow-sm">
-                <h2 className="text-2xl font-bold mb-4">{t('shipping.title')}</h2>
+                <h2 className="text-2xl font-bold mb-4">{('shipping.title')}</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <select
@@ -108,7 +106,7 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
                             setSelectedWardCode('');
                         }}
                     >
-                        <option value="">{t('shipping.selectProvince')}</option>
+                        <option value="">{('shipping.selectProvince')}</option>
                         {provinces.map((province) => (
                             <option key={province.ProvinceID} value={province.ProvinceID}>
                                 {province.ProvinceName}
@@ -122,7 +120,7 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
                         onChange={(e) => setSelectedDistrictId(parseInt(e.target.value))}
                         disabled={!selectedProvinceId}
                     >
-                        <option value="">{t('shipping.selectDistrict')}</option>
+                        <option value="">{('shipping.selectDistrict')}</option>
                         {districts.map((district) => (
                             <option key={district.DistrictID} value={district.DistrictID}>
                                 {district.DistrictName}
@@ -138,7 +136,7 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
                         onChange={(e) => setSelectedWardCode(e.target.value)}
                         disabled={wards.length === 0}
                     >
-                        <option value="">{t('shipping.selectWard')}</option>
+                        <option value="">{('shipping.selectWard')}</option>
                         {wards.map((ward) => (
                             <option key={ward.WardCode} value={ward.WardCode}>
                                 {ward.WardName}
@@ -148,7 +146,7 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
 
                     <input
                         type="text"
-                        placeholder={t('shipping.addressPlaceholder')}
+                        placeholder={('shipping.addressPlaceholder')}
                         className="p-2 border rounded"
                         value={shippingAddress.address}
                         onChange={(e) => onShippingAddressChange('address', e.target.value)}

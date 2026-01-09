@@ -1,4 +1,3 @@
-// types/cart.ts
 import type { ProductListResponse } from "./product-response.ts";
 
 export interface CartItem {
