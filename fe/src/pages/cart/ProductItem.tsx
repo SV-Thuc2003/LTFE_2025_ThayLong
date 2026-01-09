@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CartItem } from '../../types/Cart';
+import type { CartItem } from '../../types/cart.ts';
 import { Link } from 'react-router-dom';
 
 interface ProductItemProps {

@@ -62,7 +62,7 @@ const Card: React.FC<CardProps> = ({
         }
     };
 
-    const itemInCart = cartItems.find((item) => item.productId === id);
+    const itemInCart = cartItems.find((item) => item.product.id === id);
     const quantityInCart = itemInCart?.quantity || 0;
 
     return (

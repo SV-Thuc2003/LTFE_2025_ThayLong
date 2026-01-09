@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { CartItem } from "../types/Cart";
+import type { CartItem } from "../types/cart";
 // import { useTranslation } from "react-i18next";
 
 interface CartContextType {
