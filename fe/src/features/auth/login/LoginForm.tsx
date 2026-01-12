@@ -5,8 +5,8 @@ import InputField from "../../../components/common/InputField";
 import Button from "../../../components/common/Button";
 import Checkbox from "../../../components/common/Checkbox";
 import { login } from "../../../Service/authService";
-// import { LoginCredentials } from "../../../types/Login"; // Code cũ gây lỗi
 
+// import { LoginCredentials } from "../../../types/Login"; // Code cũ gây lỗi
 const LoginForm: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
             const response = await login({ username, password });
             if (contextLogin) {
                 // contextLogin(response.userId, response.username, response.token, response.role);
-                contextLogin(response.username, response.token);
+                contextLogin(response.userId, response.username, response.token);
                 navigate("/");
             }
         } catch (error: any) {

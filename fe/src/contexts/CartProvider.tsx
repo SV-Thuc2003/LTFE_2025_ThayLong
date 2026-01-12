@@ -1,89 +1,152 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { CartContext } from "./CartContext";
-import type { CartItem } from "../types/Cart";
+import type { CartItem } from "../types/cart";
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  const mapToCartItem = (item: any): CartItem => {
+    return {
+      id: item.id,
+      productId: item.productId,
+      quantity: item.quantity,
+
+      product: {
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+        slug: item.slug || "#",
+
+        images: item.thumbnail
+          ? [{ id: 0, imageUrl: item.thumbnail, isThumbnail: true }]
+          : [],
+
+        brand: undefined,
+        category: undefined,
+        details: []
+      }
+    };
+  };
 
   const fetchCart = useCallback(async () => {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
-    if (!userId || !token) return;
+    if (!userId || !token) {
+      setCartItems([]);
+      return;
+    }
 
-    const res = await axios.get(`/api/cart/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    setCartItems(
-        Array.isArray(res.data) ? res.data : res.data.cartItems ?? []
-    );
-  }, []);
-
-  useEffect(() => {
-    const loadCart = async () => {
-      const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
-      if (!userId || !token) return;
-
+    try {
       const res = await axios.get(`/api/cart/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setCartItems(
-          Array.isArray(res.data) ? res.data : res.data.cartItems ?? []
-      );
-    };
+      const rawItems = Array.isArray(res.data)
+        ? res.data
+        : res.data.cartItems ?? [];
 
-    loadCart();
+      setCartItems(rawItems.map(mapToCartItem));
+    } catch (err) {
+      console.error("Fetch cart error:", err);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
 
   return (
-      <CartContext.Provider
-          value={{
-            cartItems,
-            refreshCart: fetchCart,
+    <CartContext.Provider
+      value={{
+        cartItems,
 
-            addToCart: async (productId, quantity) => {
-              const userId = localStorage.getItem("userId");
-              const token = localStorage.getItem("token");
-              if (!userId || !token) return;
+        cartCount: cartItems.reduce((sum, i) => sum + i.quantity, 0),
 
-              await axios.post(
-                  `/api/cart/${userId}/add`,
-                  { productId, quantity },
-                  { headers: { Authorization: `Bearer ${token}` } }
-              );
-              fetchCart();
-            },
+        refreshCart: fetchCart,
 
-            removeFromCart: async (productId) => {
-              const userId = localStorage.getItem("userId");
-              const token = localStorage.getItem("token");
-              if (!userId || !token) return;
+        addToCart: async (productId, quantity) => {
+          const userId = localStorage.getItem("userId");
+          const token = localStorage.getItem("token");
+          if (!userId || !token) {
+            alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
+            return;
+          }
 
-              await axios.delete(`/api/cart/${userId}/remove/${productId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-              });
-              fetchCart();
-            },
+          await axios.post(
+            `/api/cart/${userId}/add`,
+            { productId, quantity },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
 
-            updateQuantity: async (productId, quantity) => {
-              const userId = localStorage.getItem("userId");
-              const token = localStorage.getItem("token");
-              if (!userId || !token) return;
+          fetchCart();
+        },
 
-              await axios.put(
-                  `/api/cart/${userId}/update`,
-                  { productId, quantity },
-                  { headers: { Authorization: `Bearer ${token}` } }
-              );
-              fetchCart();
-            },
-          }}
-      >
-        {children}
-      </CartContext.Provider>
+        removeFromCart: async (cartItemId) => {
+          const token = localStorage.getItem("token");
+          const userId = localStorage.getItem("userId");
+          if (!token || !userId) {
+            alert("Lỗi xác thực người dùng");
+            return;
+          }
+
+          try {
+            await axios.delete(`/api/cart/${userId}/remove/${cartItemId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            fetchCart();
+          } catch (error) {
+            console.error("Lỗi ", error);
+          }
+        },
+
+        updateQuantity: async (productId, quantity) => {
+          const token = localStorage.getItem("token");
+          const userId = localStorage.getItem("userId");
+
+          if (!token || !userId) {
+            console.error("Thiếu token hoặc userId");
+            return;
+          }
+          const currentItem = cartItems.find(item => item.productId === productId);
+
+          if (!currentItem) {
+            console.error("Không tìm thấy item này trong state giỏ hàng");
+            return;
+          }
+
+          try {
+            console.log(`🔄 Đang update CartItem ID: ${currentItem.id} - Qty: ${quantity}`);
+            await axios.put(
+              `/api/cart/${userId}/update`,
+              [
+                {
+                  id: currentItem.id,
+                  quantity: Number(quantity)
+                }
+              ],
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json"
+                }
+              }
+            );
+            fetchCart();
+
+          } catch (error: any) {
+            console.error("❌ Lỗi cập nhật:", error);
+            if (error.response?.status === 401) {
+              alert("Lỗi xác thực (401). Vui lòng đăng nhập lại.");
+            }
+          }
+        },
+      }}
+    >
+      {children}
+    </CartContext.Provider>
   );
 };

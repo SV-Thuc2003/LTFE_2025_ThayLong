@@ -1,13 +1,8 @@
-import type { ProductListResponse } from "./product-response.ts";
+import type { Product } from "./product";
 
 export interface CartItem {
   id: number;
+  productId: number;
   quantity: number;
-
-  product: ProductListResponse;
-}
-
-export interface PromoCode {
-  code: string;
-  discount: number;
+  product?: Product;
 }
