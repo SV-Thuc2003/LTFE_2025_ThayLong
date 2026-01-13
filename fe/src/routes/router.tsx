@@ -5,6 +5,8 @@ import HomePage from "../pages/home/Home";
 import LoginPage from "../pages/login/login";
 import RegisterPage from "../pages/register/index";
 import ForgotPassword from "../features/auth/forgotPassword/ForgotPassword";
+import ProfilePage from "../pages/profile";
+import FavoriteProductsPage from "../pages/favorite/FavoriteProductsPage";
 
 import { Route, Routes } from 'react-router-dom';
 import ProductDetailPage from "../pages/ProductDetailPage";
@@ -23,6 +25,8 @@ const AppRoutes =() => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path='/register' element={<RegisterPage/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/favorites" element={<FavoriteProductsPage />} />
 
                 {/* <Route path='/product' element={<Products/>}/> */}
                 <Route path="/cart" element={<CartCheckOut />} />
