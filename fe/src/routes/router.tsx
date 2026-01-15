@@ -1,4 +1,4 @@
-import { Layout } from "../layouts/layout";
+import {Layout} from "../layouts/layout";
 
 import HomePage from "../pages/home/Home";
 
@@ -8,11 +8,13 @@ import ForgotPassword from "../features/auth/forgotPassword/ForgotPassword";
 import ProfilePage from "../pages/profile";
 import FavoriteProductsPage from "../pages/favorite/FavoriteProductsPage";
 
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import ProductDetailPage from "../pages/ProductDetailPage";
 import ProductPage from "../pages/ProductPage";
 import CartCheckOut from "../pages/cart";
 import Checkout from "../pages/checkout";
+import OrderSuccess from "../pages/order/OrderSuccess.tsx";
+import Order from "../pages/order";
 
 const AppRoutes =() => {
     return (
@@ -32,6 +34,8 @@ const AppRoutes =() => {
                 {/* <Route path='/product' element={<Products/>}/> */}
                 <Route path="/cart" element={<CartCheckOut />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/orders" element={<Order />} />
+                <Route path="/order-success" element={<OrderSuccess />} />
             </Route>
         </Routes>
     );

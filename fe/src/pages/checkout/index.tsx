@@ -1,26 +1,22 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import PersonalInfoForm from "../checkout/PersonalInfoForm";
 import ShippingAddressForm from "../checkout/ShippingAddressForm";
 import PaymentMethodForm from "../checkout/PaymentMethodForm";
 import OrderSummary from "../checkout/OrderSummary";
 import QrPayment from "../payment/QrPayment";
 
-import type {
-    CheckoutState,
-    PersonalInfo,
-    ShippingAddress,
-} from "../../types/check-out";
-import type {CartItem} from "../../types/cart";
+import type { CheckoutState, PersonalInfo, ShippingAddress } from "../../types/check-out";
+import type { CartItem } from "../../types/cart";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import {useCart} from "../../contexts/useCart.tsx";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../contexts/useCart";
 
 const Checkout: React.FC = () => {
     const navigate = useNavigate();
-    const {clearCart} = useCart(); // Lấy hàm clearCart
+    const { clearCart } = useCart();
 
     const [checkoutState, setCheckoutState] = useState<CheckoutState>({
-        personalInfo: {name: "", email: "", phone: ""},
+        personalInfo: { name: "", email: "", phone: "" },
         shippingAddress: {
             address: "",
             ward: "",
@@ -31,35 +27,27 @@ const Checkout: React.FC = () => {
             provinceId: ""
         },
         discountCode: "",
-        paymentMethod: "cash", // Mặc định là tiền mặt
+        paymentMethod: "cash",
     });
 
     const [products, setProducts] = useState<CartItem[]>([]);
     const [shippingFee, setShippingFee] = useState<number>(0);
-
-    // State cho QR Payment
     const [showQr, setShowQr] = useState(false);
     const [qrData, setQrData] = useState<any>(null);
 
-    // Load giỏ hàng từ API
     useEffect(() => {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
-
-        if (!userId || !token) {
-            // Nếu chưa login, đẩy về login hoặc xử lý khác
-            return;
-        }
+        if (!userId || !token) return;
 
         axios.get(`/api/cart/${userId}`, {
-            headers: {Authorization: `Bearer ${token}`},
+            headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
         })
             .then(res => setProducts(res.data))
             .catch(err => console.error("Lỗi tải giỏ hàng:", err));
     }, []);
 
-    // Tính toán tiền
     const subtotal = useMemo(() => {
         return products.reduce((sum, item: any) => {
             const price = item.price ?? item.product?.price ?? 0;
@@ -67,32 +55,29 @@ const Checkout: React.FC = () => {
         }, 0);
     }, [products]);
 
-    const discount = checkoutState.discountCode ? 10000 : 0;
+    const discount = 0;
 
-    // Handlers update State
-    const handlePersonalInfoChange = (field: keyof PersonalInfo, value: string) => {
+    const handlePersonalInfoChange = useCallback((field: keyof PersonalInfo, value: string) => {
         setCheckoutState(prev => ({
             ...prev,
-            personalInfo: {...prev.personalInfo, [field]: value},
+            personalInfo: { ...prev.personalInfo, [field]: value },
         }));
-    };
+    }, []);
 
-    const handleShippingAddressChange = (field: keyof ShippingAddress, value: string) => {
-        setCheckoutState(prev => ({
-            ...prev,
-            shippingAddress: {...prev.shippingAddress, [field]: value},
-        }));
-    };
+    const handleShippingAddressChange = useCallback((field: keyof ShippingAddress, value: string) => {
+        setCheckoutState(prev => {
+            if (prev.shippingAddress[field] === value) return prev;
+            return {
+                ...prev,
+                shippingAddress: { ...prev.shippingAddress, [field]: value },
+            };
+        });
+    }, []);
 
-    const handlePaymentMethodChange = (value: string) => {
-        setCheckoutState(prev => ({...prev, paymentMethod: value}));
-    };
+    const handlePaymentMethodChange = useCallback((value: string) => {
+        setCheckoutState(prev => ({ ...prev, paymentMethod: value }));
+    }, []);
 
-    const handleApplyDiscountCode = () => {
-        console.log("Áp dụng mã:", checkoutState.discountCode);
-    };
-
-    // Xử lý Đặt hàng
     const handlePlaceOrder = async () => {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
@@ -102,9 +87,15 @@ const Checkout: React.FC = () => {
             return;
         }
 
-        // Validate cơ bản
-        if (!checkoutState.personalInfo.name || !checkoutState.shippingAddress.address) {
-            alert("Vui lòng điền đầy đủ thông tin giao hàng");
+        const { address, provinceId, districtId, wardCode } = checkoutState.shippingAddress;
+        const { name, phone } = checkoutState.personalInfo;
+
+        if (!name || !phone) {
+            alert("Vui lòng điền tên và số điện thoại!");
+            return;
+        }
+        if (!address || !provinceId || !districtId || !wardCode) {
+            alert("Vui lòng chọn đầy đủ địa chỉ giao hàng!");
             return;
         }
 
@@ -115,105 +106,102 @@ const Checkout: React.FC = () => {
 
         const amount = subtotal - discount + shippingFee;
 
-        // Payload chung cho cả 2 trường hợp
         const orderPayload = {
             userId: parseInt(userId),
             personalInfo: checkoutState.personalInfo,
-            shippingAddress: checkoutState.shippingAddress,
+            shippingAddress: {
+                ...checkoutState.shippingAddress,
+                provinceId: String(provinceId),
+                districtId: String(districtId),
+                wardCode: String(wardCode)
+            },
             products: formattedProducts,
             paymentMethod: checkoutState.paymentMethod,
-            discountCode: checkoutState.discountCode,
+            discountCode: "0",
             subtotal,
             shippingFee,
-            discount,
+            discount: 0,
             total: amount,
+
+            status: "Pending"
         };
 
+        console.log("SENDING PAYLOAD:", JSON.stringify(orderPayload, null, 2));
+
         if (checkoutState.paymentMethod === "vnpay") {
-            // --- THANH TOÁN QR ---
             try {
                 const qrRes = await axios.get(`/api/payment/qr`, {
-                    params: {amount},
+                    params: { amount },
                     withCredentials: true
                 });
-
-                const {qrUrl, txnRef} = qrRes.data;
-
                 setQrData({
-                    qrUrl,
-                    txnRef,
+                    qrUrl: qrRes.data.qrUrl,
+                    txnRef: qrRes.data.txnRef,
                     userId: parseInt(userId),
                     amount,
-                    // Truyền payload này vào để component con QrPayment dùng khi user xác nhận
-                    payload: {...orderPayload, status: "PAID"}
+                    payload: { ...orderPayload, status: "Paid" } // QR thì status là Paid
                 });
-
                 setShowQr(true);
             } catch (err) {
-                console.error("Lỗi tạo QR:", err);
-                alert("Không thể tạo mã QR lúc này.");
+                alert("Lỗi tạo mã QR. Vui lòng thử lại.");
             }
         } else {
-            // --- THANH TOÁN THƯỜNG (COD) ---
             try {
-                await axios.post("/api/orders", {...orderPayload, status: "Accepting"}, {
-                    headers: {Authorization: `Bearer ${token}`}
+                await axios.post("/api/orders", orderPayload, {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
-
-                clearCart(); // Xóa giỏ hàng client
-                navigate("/order-success"); // Chuyển trang
-            } catch (err) {
+                clearCart();
+                navigate("/order-success");
+            } catch (err: any) {
                 console.error("Lỗi đặt hàng:", err);
-                alert("Đặt hàng thất bại. Vui lòng thử lại.");
+                const serverMessage = err.response?.data?.message || err.response?.data || "Lỗi hệ thống";
+
+                if (String(serverMessage).includes("OrderStatus")) {
+                    alert(`Lỗi: Backend không tìm thấy trạng thái "Pending"`);
+                } else {
+                    alert(`Đặt hàng thất bại: ${serverMessage}`);
+                }
             }
         }
     };
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <main className="flex-grow">
-                <div className="container mx-auto px-4 py-8">
-                    <h1 className="text-3xl font-bold mb-8 text-center uppercase">Thanh toán</h1>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 space-y-6">
-                            <PersonalInfoForm
+            <main className="flex-grow container mx-auto px-4 py-8">
+                <h1 className="text-3xl font-bold mb-8 text-center uppercase">Thanh toán</h1>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 space-y-6">
+                        <PersonalInfoForm
+                            personalInfo={checkoutState.personalInfo}
+                            onPersonalInfoChange={handlePersonalInfoChange}
+                        />
+                        <ShippingAddressForm
+                            shippingAddress={checkoutState.shippingAddress}
+                            onShippingAddressChange={handleShippingAddressChange}
+                            onShippingFeeChange={setShippingFee}
+                        />
+                        <PaymentMethodForm
+                            paymentMethod={checkoutState.paymentMethod}
+                            onPaymentMethodChange={handlePaymentMethodChange}
+                            onApplyDiscountCode={() => {}}
+                        />
+                    </div>
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-4">
+                            <OrderSummary
                                 personalInfo={checkoutState.personalInfo}
-                                onPersonalInfoChange={handlePersonalInfoChange}
-                            />
-                            <ShippingAddressForm
                                 shippingAddress={checkoutState.shippingAddress}
-                                onShippingAddressChange={handleShippingAddressChange}
-                                onShippingFeeChange={setShippingFee}
-                            />
-                            <PaymentMethodForm
                                 paymentMethod={checkoutState.paymentMethod}
-                                onPaymentMethodChange={handlePaymentMethodChange}
-                                onApplyDiscountCode={handleApplyDiscountCode}
+                                products={products ?? []}
+                                subtotal={subtotal}
+                                discount={discount}
+                                shippingFee={shippingFee}
+                                onPlaceOrder={handlePlaceOrder}
                             />
-                        </div>
-
-                        {/* Cột phải: Tóm tắt đơn hàng */}
-                        <div className="lg:col-span-1">
-                            <div className="sticky top-4">
-                                <OrderSummary
-                                    personalInfo={checkoutState.personalInfo}
-                                    shippingAddress={checkoutState.shippingAddress}
-                                    discountCode={checkoutState.discountCode}
-                                    paymentMethod={checkoutState.paymentMethod}
-                                    products={products ?? []}
-                                    subtotal={subtotal}
-                                    discount={discount}
-                                    shippingFee={shippingFee}
-                                    onPlaceOrder={handlePlaceOrder}
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>
             </main>
-            {/* Đã xóa Footer để tránh lặp với Layout */}
-
             {qrData && (
                 <QrPayment
                     isOpen={showQr}
@@ -224,20 +212,12 @@ const Checkout: React.FC = () => {
                     amount={qrData.amount}
                     payload={qrData.payload}
                     onConfirm={async (payload) => {
-                        // Khi user xác nhận đã chuyển khoản
-                        try {
-                            const res = await axios.post("/api/orders", payload, {
-                                headers: {Authorization: `Bearer ${localStorage.getItem("token")}`},
-                                withCredentials: true
-                            });
-
-                            clearCart(); // Xóa giỏ hàng
-                            navigate("/order-success"); // Chuyển trang
-                            return res.data;
-                        } catch (e) {
-                            console.error("Lỗi xác nhận đơn hàng QR:", e);
-                            throw e;
-                        }
+                        await axios.post("/api/orders", payload, {
+                            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                            withCredentials: true
+                        });
+                        clearCart();
+                        navigate("/order-success");
                     }}
                 />
             )}
