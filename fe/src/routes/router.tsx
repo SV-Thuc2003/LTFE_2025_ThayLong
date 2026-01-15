@@ -12,6 +12,7 @@ import { Route, Routes } from 'react-router-dom';
 import ProductDetailPage from "../pages/ProductDetailPage";
 import ProductPage from "../pages/ProductPage";
 import CartCheckOut from "../pages/cart";
+import Checkout from "../pages/checkout";
 
 const AppRoutes =() => {
     return (
@@ -30,6 +31,7 @@ const AppRoutes =() => {
 
                 {/* <Route path='/product' element={<Products/>}/> */}
                 <Route path="/cart" element={<CartCheckOut />} />
+                <Route path="/checkout" element={<Checkout />} />
             </Route>
         </Routes>
     );
