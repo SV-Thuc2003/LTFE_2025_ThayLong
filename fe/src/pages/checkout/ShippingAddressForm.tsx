@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import type { ShippingAddress } from '../../types/check-out.ts';
 
 interface ShippingAddressFormProps {
@@ -8,181 +7,113 @@ interface ShippingAddressFormProps {
     onShippingFeeChange: (fee: number) => void;
 }
 
-interface GHNProvince {
-    ProvinceID: number;
-    ProvinceName: string;
-}
-
-interface GHNDistrict {
-    DistrictID: number;
-    DistrictName: string;
-}
-
-interface GHNWard {
-    WardCode: string;
-    WardName: string;
-}
-
-const GHN_TOKEN = '68b20e88-40bb-11f0-a826-7e1a8402b405';
+const FAKE_PROVINCES = [
+    { ProvinceID: 201, ProvinceName: "Hà Nội" },
+    { ProvinceID: 202, ProvinceName: "Hồ Chí Minh" },
+    { ProvinceID: 203, ProvinceName: "Đà Nẵng" }
+];
+const FAKE_DISTRICTS: Record<number, any[]> = {
+    201: [{ DistrictID: 1482, DistrictName: "Quận Ba Đình" }, { DistrictID: 1484, DistrictName: "Quận Đống Đa" }],
+    202: [{ DistrictID: 1442, DistrictName: "Quận 1" }, { DistrictID: 1444, DistrictName: "Thành phố Thủ Đức" }],
+    203: [{ DistrictID: 1530, DistrictName: "Quận Hải Châu" }]
+};
+const FAKE_WARDS: Record<number, any[]> = {
+    1482: [{ WardCode: "1001", WardName: "Phường Phúc Xá" }],
+    1484: [{ WardCode: "1002", WardName: "Phường Láng Hạ" }],
+    1442: [{ WardCode: "2001", WardName: "Phường Bến Nghé" }],
+};
 
 const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
-                                                                     shippingAddress,
-                                                                     onShippingAddressChange,
-                                                                     onShippingFeeChange,
+                                                                     shippingAddress, onShippingAddressChange, onShippingFeeChange
                                                                  }) => {
-
-    // 2. Thêm Generic Type vào useState để sửa lỗi "type never"
-    const [provinces, setProvinces] = useState<GHNProvince[]>([]);
-    const [districts, setDistricts] = useState<GHNDistrict[]>([]);
-    const [wards, setWards] = useState<GHNWard[]>([]);
+    const [districts, setDistricts] = useState<any[]>([]);
+    const [wards, setWards] = useState<any[]>([]);
 
     const [selectedProvinceId, setSelectedProvinceId] = useState<number | null>(null);
     const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
     const [selectedWardCode, setSelectedWardCode] = useState<string>('');
 
-    // Load Provinces
+    // Logic giả lập load Quận/Huyện/Xã
     useEffect(() => {
-        axios.post('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {}, {
-            headers: { Token: GHN_TOKEN },
-        }).then((res) => setProvinces(res.data.data));
-    }, []);
-
-    // Load Districts khi Province thay đổi
-    useEffect(() => {
-        if (!selectedProvinceId) return;
-        axios.post('https://online-gateway.ghn.vn/shiip/public-api/master-data/district', {
-            province_id: selectedProvinceId,
-        }, {
-            headers: { Token: GHN_TOKEN },
-        }).then((res) => setDistricts(res.data.data));
+        if (!selectedProvinceId) { setDistricts([]); return; }
+        setDistricts(FAKE_DISTRICTS[selectedProvinceId] || []);
     }, [selectedProvinceId]);
 
-    // Load Wards khi District thay đổi
     useEffect(() => {
-        if (!selectedDistrictId) return;
-        axios.post('https://online-gateway.ghn.vn/shiip/public-api/master-data/ward', {
-            district_id: selectedDistrictId,
-        }, {
-            headers: { Token: GHN_TOKEN },
-        }).then((res) => setWards(res.data.data));
+        if (!selectedDistrictId) { setWards([]); return; }
+        setWards(FAKE_WARDS[selectedDistrictId] || [{ WardCode: "9999", WardName: "Phường Mẫu" }]);
     }, [selectedDistrictId]);
 
-    // Cập nhật state cha khi Province chọn thay đổi
-    // 3. Fix ESLint: Thêm provinces và onShippingAddressChange vào dependency array
+    // Update state cha
     useEffect(() => {
-        if (selectedProvinceId !== null) {
-            const selected = provinces.find(p => p.ProvinceID === selectedProvinceId);
-            if (selected) {
-                onShippingAddressChange('city', selected.ProvinceName);
-                onShippingAddressChange('provinceId', selected.ProvinceID.toString());
-            }
+        const p = FAKE_PROVINCES.find(x => x.ProvinceID === selectedProvinceId);
+        if (p) {
+            onShippingAddressChange('provinceId', p.ProvinceID.toString());
+            onShippingAddressChange('city', p.ProvinceName);
         }
-    }, [selectedProvinceId, provinces, onShippingAddressChange]);
+    }, [selectedProvinceId, onShippingAddressChange]);
 
-    // Cập nhật state cha khi District chọn thay đổi
-    // 3. Fix ESLint: Thêm districts và onShippingAddressChange vào dependency array
     useEffect(() => {
-        if (selectedDistrictId !== null) {
-            const selected = districts.find(d => d.DistrictID === selectedDistrictId);
-            if (selected) {
-                onShippingAddressChange('district', selected.DistrictName);
-                onShippingAddressChange('districtId', selected.DistrictID.toString());
-            }
+        const d = districts.find(x => x.DistrictID === selectedDistrictId);
+        if (d) {
+            onShippingAddressChange('districtId', d.DistrictID.toString());
+            onShippingAddressChange('district', d.DistrictName);
         }
     }, [selectedDistrictId, districts, onShippingAddressChange]);
 
-    // Cập nhật state cha khi Ward chọn thay đổi
-    // 3. Fix ESLint: Thêm wards và onShippingAddressChange vào dependency array
     useEffect(() => {
-        if (selectedWardCode) {
-            const ward = wards.find(w => w.WardCode === selectedWardCode);
-            if (ward) {
-                onShippingAddressChange('ward', ward.WardName);
-                onShippingAddressChange('wardCode', ward.WardCode);
-            }
+        const w = wards.find(x => x.WardCode === selectedWardCode);
+        if (w) {
+            onShippingAddressChange('wardCode', w.WardCode);
+            onShippingAddressChange('ward', w.WardName);
         }
     }, [selectedWardCode, wards, onShippingAddressChange]);
 
-    // Tính phí ship
-    // 3. Fix ESLint: Thêm shippingAddress và onShippingFeeChange
+    // Tính phí ship giả
     useEffect(() => {
         if (shippingAddress.districtId && shippingAddress.wardCode) {
-            // Lưu ý: Đảm bảo shippingAddress object ổn định hoặc chỉ pass các field cần thiết
-            axios.post('/api/shipping/fee', shippingAddress)
-                .then(res => onShippingFeeChange(res.data.total))
-                .catch(err => {
-                    console.error("❌ GHN API lỗi:", err);
-                    onShippingFeeChange(0);
-                });
+            onShippingFeeChange(30000);
         }
-    }, [
-        shippingAddress.districtId,
-        shippingAddress.wardCode,
-        // Thêm shippingAddress vào dependency vì nó được dùng trong body axios.post
-        shippingAddress,
-        onShippingFeeChange
-    ]);
+    }, [shippingAddress.districtId, shippingAddress.wardCode, onShippingFeeChange]);
 
     return (
         <div className="mb-6">
             <div className="p-6 border border-gray-300 rounded-lg space-y-4 bg-white shadow-sm">
-                {/* Sửa lại hàm t() thay vì ('key') */}
-                <h2 className="text-2xl font-bold mb-4">{('shipping.title')}</h2>
-
+                <h2 className="text-2xl font-bold mb-4">Địa chỉ giao hàng</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <select
                         className="p-2 border rounded"
-                        value={selectedProvinceId ?? ''}
                         onChange={(e) => {
-                            const id = parseInt(e.target.value);
-                            setSelectedProvinceId(id);
-                            setDistricts([]);
-                            setWards([]);
-                            setSelectedDistrictId(null);
-                            setSelectedWardCode('');
+                            setSelectedProvinceId(parseInt(e.target.value));
+                            setSelectedDistrictId(null); setSelectedWardCode('');
                         }}
                     >
-                        <option value="">{('shipping.selectProvince')}</option>
-                        {provinces.map((province) => (
-                            <option key={province.ProvinceID} value={province.ProvinceID}>
-                                {province.ProvinceName}
-                            </option>
-                        ))}
+                        <option value="">-- Chọn Tỉnh/Thành --</option>
+                        {FAKE_PROVINCES.map(p => <option key={p.ProvinceID} value={p.ProvinceID}>{p.ProvinceName}</option>)}
                     </select>
 
                     <select
                         className="p-2 border rounded"
-                        value={selectedDistrictId ?? ''}
                         onChange={(e) => setSelectedDistrictId(parseInt(e.target.value))}
                         disabled={!selectedProvinceId}
                     >
-                        <option value="">{('shipping.selectDistrict')}</option>
-                        {districts.map((district) => (
-                            <option key={district.DistrictID} value={district.DistrictID}>
-                                {district.DistrictName}
-                            </option>
-                        ))}
+                        <option value="">-- Chọn Quận/Huyện --</option>
+                        {districts.map(d => <option key={d.DistrictID} value={d.DistrictID}>{d.DistrictName}</option>)}
                     </select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <select
                         className="p-2 border rounded"
-                        value={selectedWardCode}
                         onChange={(e) => setSelectedWardCode(e.target.value)}
-                        disabled={wards.length === 0}
+                        disabled={!selectedDistrictId}
                     >
-                        <option value="">{('shipping.selectWard')}</option>
-                        {wards.map((ward) => (
-                            <option key={ward.WardCode} value={ward.WardCode}>
-                                {ward.WardName}
-                            </option>
-                        ))}
+                        <option value="">-- Chọn Phường/Xã --</option>
+                        {wards.map(w => <option key={w.WardCode} value={w.WardCode}>{w.WardName}</option>)}
                     </select>
-
                     <input
                         type="text"
-                        placeholder={('shipping.addressPlaceholder')}
+                        placeholder="Số nhà, tên đường..."
                         className="p-2 border rounded"
                         value={shippingAddress.address}
                         onChange={(e) => onShippingAddressChange('address', e.target.value)}
@@ -192,5 +123,4 @@ const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
         </div>
     );
 };
-
 export default ShippingAddressForm;

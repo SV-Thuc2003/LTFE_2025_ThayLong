@@ -20,6 +20,9 @@ const ProductInfo = ({ product }: Props) => {
       </p>
 
       <div className="mt-6">
+
+        {/* <button className="bg-rose-600 text-white px-6 py-3 rounded"> */}
+
         <button
           onClick={async () => { 
             const token = localStorage.getItem("token");

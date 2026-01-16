@@ -1,6 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import { useNavigate } from "react-router-dom"; // Không cần nếu Checkout đã handle navigate
 
 interface QrPaymentModalProps {
     isOpen: boolean;
@@ -10,7 +9,7 @@ interface QrPaymentModalProps {
     userId: number;
     amount: number;
     payload: any;
-    onConfirm: (payload: any) => Promise<number>;
+    onConfirm: (payload: any) => Promise<any>;
 }
 
 const QrPayment: React.FC<QrPaymentModalProps> = ({
@@ -18,78 +17,68 @@ const QrPayment: React.FC<QrPaymentModalProps> = ({
                                                       onClose,
                                                       qrUrl,
                                                       txnRef,
-                                                      userId,
+                                                      // userId, // Có thể không cần dùng ở đây nếu payload đã có
                                                       amount,
                                                       payload,
                                                       onConfirm,
                                                   }) => {
-    const navigate = useNavigate();
 
     const handleConfirmPayment = async () => {
-        if (
-            typeof txnRef !== "string" || txnRef.trim() === "" ||
-            typeof userId !== "number" || isNaN(userId)
-        ) {
-            alert(("payment.error.missingInfo"));
-            return;
-        }
-
         try {
-            const orderId = await onConfirm(payload);
-
-            if (!orderId || isNaN(orderId)) {
-                alert(("payment.error.noOrderId"));
-                return;
-            }
-
-            await axios.get(`/api/payment/verify`, {
-                params: { txnRef, orderId, userId },
-                withCredentials: true,
-            });
-
-            navigate("/order-success");
+            // Gọi hàm onConfirm từ component cha (Checkout)
+            // Hàm này sẽ chịu trách nhiệm gọi API tạo đơn hàng và chuyển trang
+            await onConfirm(payload);
         } catch (err: any) {
-            alert(("payment.error.failed"));
-            console.error("❌", err.response?.data || err.message);
+            console.error("Lỗi xác nhận thanh toán:", err);
+            alert("Xác nhận thất bại. Vui lòng thử lại!");
         }
     };
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                <h2 className="text-xl font-semibold mb-4 text-center">
-                    {("payment.qrTitle")}
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm animate-fade-in-down">
+                <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
+                    Thanh toán qua QR
                 </h2>
 
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-6 bg-gray-50 p-4 rounded border border-gray-200">
+                    {/* Sử dụng dịch vụ tạo QR từ URL nếu qrUrl là link thanh toán */}
                     <img
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`}
                         alt="QR code"
-                        className="w-[200px] h-[200px]"
+                        className="w-[180px] h-[180px] object-contain"
+                        onError={(e) => {
+                            e.currentTarget.src = "https://placehold.co/200x200?text=QR+Error";
+                        }}
                     />
                 </div>
 
-                <p className="text-sm text-center text-gray-600 mb-2">
-                    {("payment.txnRef")}: <strong>{txnRef}</strong>
-                </p>
-                <p className="text-sm text-center text-gray-600 mb-4">
-                    {("payment.amount")}: <strong>{amount.toLocaleString()}đ</strong>
-                </p>
+                <div className="space-y-2 mb-6 text-center">
+                    <p className="text-sm text-gray-600">
+                        Mã giao dịch: <span className="font-mono font-bold text-black">{txnRef}</span>
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        Số tiền: <span className="font-bold text-red-600 text-lg">{amount.toLocaleString()} ₫</span>
+                    </p>
+                    <p className="text-xs text-gray-500 italic mt-2">
+                        Vui lòng quét mã trên bằng ứng dụng ngân hàng hoặc ví điện tử.
+                    </p>
+                </div>
 
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-center gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                        className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition font-medium text-sm"
                     >
-                        {("payment.close")}
+                        Đóng
                     </button>
                     <button
                         onClick={handleConfirmPayment}
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition font-bold text-sm shadow-sm"
                     >
-                        {("payment.confirmed")}
+                        Đã thanh toán
                     </button>
                 </div>
             </div>
