@@ -11,6 +11,7 @@ public class ProductListRequest {
     private Integer categoryId;
     private String categorySlug;
     private Integer brandId;
+    private String keyword;
 
     private BigDecimal minPrice;
     private BigDecimal maxPrice;

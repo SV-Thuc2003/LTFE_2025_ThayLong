@@ -37,4 +37,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 
     @EntityGraph(attributePaths = {"images"})
     List<Product> findTop5ByNameContainingIgnoreCase(String keyword);
+
+    @EntityGraph(attributePaths = {"images"})
+    Optional<Product> findFirstByOrderByPriceAsc();
 }
