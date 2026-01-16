@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import InputField from "../../../components/common/InputField";
-import Button from "../../../components/Button";
+import Button from "../../../components/common/Button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { resetPassword } from "../../../Service/authService";
-import { useTranslation } from 'react-i18next';
 
 interface Props {
   email: string;
@@ -17,61 +16,54 @@ const StepNewPassword: React.FC<Props> = ({ email, otp, onBack }) => {
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!password || !confirm) {
-      toast.warning(t("auth.fill_all_fields"));
+      toast.warning("Vui lòng điền đầy đủ các trường.");
       return;
     }
-
     if (password !== confirm) {
-      toast.warning(t("auth.password_mismatch"));
+      toast.warning("Mật khẩu xác nhận không khớp.");
       return;
     }
 
     setLoading(true);
-
     try {
       const message = await resetPassword(email, otp, password);
-      toast.success(message || t("auth.reset_success"));
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+      toast.success(message || "Đặt lại mật khẩu thành công!");
+      setTimeout(() => navigate("/login"), 1000);
     } catch (err: any) {
-      console.error("Lỗi:", err);
-      toast.error(err?.response?.data?.message || t("auth.reset_failed"));
+      toast.error(err?.response?.data?.message || "Đã xảy ra lỗi khi đặt lại mật khẩu.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-      <form onSubmit={handleReset} className="space-y-4">
+      <form onSubmit={handleReset} className="space-y-4 w-full">
         <InputField
-            label={t("auth.new_password")}
-            placeholder={t("auth.enter_new_password")}
+            label="Mật khẩu mới"
+            placeholder="Nhập mật khẩu mới của bạn"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
         />
         <InputField
-            label={t("auth.confirm_password")}
-            placeholder={t("auth.retype_password")}
+            label="Xác nhận mật khẩu"
+            placeholder="Nhập lại mật khẩu mới"
             type="password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required
         />
         <div className="flex gap-2">
-          <Button type="button" onClick={onBack} variant="secondary" className="flex-1">
-            {t("common.back")}
+          <Button type="button" onClick={onBack} variant="secondary" className="flex-1 py-2.5">
+            Quay lại
           </Button>
-          <Button type="submit" className="flex-1" disabled={loading}>
-            {loading ? t("auth.changing") : t("auth.reset_password")}
+          <Button type="submit" className="flex-1 py-2.5" disabled={loading}>
+            {loading ? "Đang đổi..." : "Đặt lại mật khẩu"}
           </Button>
         </div>
       </form>
