@@ -18,7 +18,7 @@ const ProductInfo = ({ product }: Props) => {
       </p>
 
       <div className="mt-6">
-        <button className="bg-blue-600 text-white px-6 py-3 rounded">
+        <button className="bg-rose-600 text-white px-6 py-3 rounded">
           Thêm vào giỏ hàng
         </button>
       </div>
