@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext";
+
+import { useAuth } from "../../../hooks/useAuth";
+// import { useTranslation } from "react-i18next"; // Tạm ẩn i18n
+
+// import { useAuth } from "../../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+
 
 const OAuth2RedirectHandler = () => {
   const location = useLocation();

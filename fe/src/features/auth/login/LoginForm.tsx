@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../hooks/useAuth";
 import InputField from "../../../components/common/InputField";
 import Button from "../../../components/common/Button";
 import Checkbox from "../../../components/common/Checkbox";
