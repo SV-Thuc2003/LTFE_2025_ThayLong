@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import Stepper from "../../components/common/Stepper";
 import RegistrationForm from "../../features/auth/register/RegistrationForm";
 import Illustration from "../../features/auth/register/Illustration";
 import OtpVerification from "../../features/auth/register/OtpInput";
 
 const RegisterPage: React.FC = () => {
-    const { t } = useTranslation();
+    // Quản lý bước hiện tại và email để xác thực OTP
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [email, setEmail] = useState<string>("");
 
-    const steps = [t("auth.steps.register"), t("auth.steps.verify")];
+    const steps = ["Đăng ký tài khoản", "Xác thực OTP"];
 
     const handleRegisterSuccess = (registeredEmail: string) => {
         setEmail(registeredEmail);
@@ -18,26 +17,28 @@ const RegisterPage: React.FC = () => {
     };
 
     const handleOtpSuccess = () => {
-        alert(t("auth.register.success")); // Đăng ký và xác thực OTP thành công!
+        alert("Chúc mừng! Bạn đã đăng ký và xác thực tài khoản thành công.");
     };
-// <div className="w-full md:w-1/2 flex items-center justify-center">
-//                 <Illustration />
-//             </div>
+
     return (
-        <div className="min-h-screen flex justify-center items-center px-4">
-
-
-            <div className="w-full p-6 bg-white rounded-md shadow-md mx-auto flex flex-col items-center">
-                <div className="w-full max-w-md mb-6">
+        <div className="min-h-screen flex justify-center items-center px-4 bg-gray-50">
+            <div className="w-full max-w-2xl p-8 bg-white rounded-2xl shadow-lg mx-auto flex flex-col items-center">
+                <div className="w-full max-w-md mb-8">
                     <Stepper steps={steps} currentStep={currentStep} />
                 </div>
 
+                {/* Bước 1: Form điền thông tin đăng ký */}
                 {currentStep === 0 && (
-                    <RegistrationForm onSuccess={handleRegisterSuccess} />
+                    <div className="w-full animate-fadeIn">
+                        <RegistrationForm onSuccess={handleRegisterSuccess} />
+                    </div>
                 )}
 
+                {/* Bước 2: Nhập mã OTP gửi về email */}
                 {currentStep === 1 && (
-                    <OtpVerification email={email} onSuccess={handleOtpSuccess} />
+                    <div className="w-full animate-fadeIn">
+                        <OtpVerification email={email} onSuccess={handleOtpSuccess} />
+                    </div>
                 )}
             </div>
         </div>

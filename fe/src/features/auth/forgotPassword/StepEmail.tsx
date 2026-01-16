@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import InputField from "../../../components/common/InputField";
 import Button from "../../../components/common/Button";
 import { toast } from "react-toastify";
-import { forgotPassword } from "../../../Service/authService"; // import hàm dùng chung
-import { useTranslation } from 'react-i18next';
+import { forgotPassword } from "../../../Service/authService";
 
 interface Props {
   email: string;
@@ -13,17 +12,16 @@ interface Props {
 
 const StepEmail: React.FC<Props> = ({ email, setEmail, onSuccess }) => {
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await forgotPassword(email); // sử dụng API chung
-      toast.success(t("auth.otp_sent"));
+      await forgotPassword(email);
+      toast.success("Mã OTP đã được gửi đến email của bạn.");
       onSuccess();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || t("auth.otp_failed"));
+      toast.error(error?.response?.data?.message || "Không thể gửi mã OTP. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -32,15 +30,15 @@ const StepEmail: React.FC<Props> = ({ email, setEmail, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-4">
       <InputField
-          label={t("auth.email")}
-          placeholder={t("auth.enter_email")}
+          label="Địa chỉ Email"
+          placeholder="Nhập email của bạn để lấy lại mật khẩu"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
       />
 
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? t("auth.sending") : t("auth.send_otp")}
+        {loading ? "Đang gửi..." : "Gửi mã xác nhận"}
       </Button>
     </form>
   );
