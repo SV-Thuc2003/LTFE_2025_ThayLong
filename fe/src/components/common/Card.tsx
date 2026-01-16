@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
-import { useCart } from "../../contexts/CartContext";
+import { useCart } from "../../contexts/useCart";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
@@ -62,7 +62,7 @@ const Card: React.FC<CardProps> = ({
         }
     };
 
-    const itemInCart = cartItems.find((item) => item.productId === id);
+    const itemInCart = cartItems.find((item) => item.product.id === id);
     const quantityInCart = itemInCart?.quantity || 0;
 
     return (

@@ -1,10 +1,12 @@
 import type { ProductDetailResponse } from "../../types/product-response";
+import { useCart } from "../../contexts/useCart";
 
 interface Props {
   product: ProductDetailResponse;
 }
 
 const ProductInfo = ({ product }: Props) => {
+  const { addToCart } = useCart();
   return (
     <div>
       <h1 className="text-3xl font-bold">{product.name}</h1>
@@ -18,7 +20,28 @@ const ProductInfo = ({ product }: Props) => {
       </p>
 
       <div className="mt-6">
-        <button className="bg-rose-600 text-white px-6 py-3 rounded">
+
+        {/* <button className="bg-rose-600 text-white px-6 py-3 rounded"> */}
+
+        <button
+          onClick={async () => { 
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+              alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
+              return;
+            }
+
+            try {
+              await addToCart(product.id, 1);
+              alert("Đã thêm sản phẩm vào giỏ hàng!");
+            } catch (error) {
+              console.error("Lỗi thêm giỏ hàng:", error);
+              alert("Có lỗi xảy ra, vui lòng thử lại.");
+            }
+          }}
+          className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors"
+        >
           Thêm vào giỏ hàng
         </button>
       </div>
