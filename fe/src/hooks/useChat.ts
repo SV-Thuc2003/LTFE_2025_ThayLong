@@ -1,51 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import { createChatClient } from "../services/chatSocket";
-import type { Product } from "../types/product";
-
-export type { Product } from "../types/product";
+// import type { Product } from "../types/product";
+import type { ChatProduct } from "../types/chat";
 
 export interface ChatMessage {
   sender: "USER" | "BOT";
   message: string;
-  products: Product[];
+  products: ChatProduct[];
 }
 
 export const useChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const clientRef = useRef<Client | null>(null);
-  const pendingMessages = useRef<any[]>([]); // queue tin nhắn chờ STOMP connect
+  const pendingMessages = useRef<any[]>([]);
 
   useEffect(() => {
-    clientRef.current = createChatClient((msg) => {
-      setMessages((prev) => [...prev, msg]);
+  let isMounted = true;
+
+  if (!clientRef.current) {
+    clientRef.current = createChatClient((data) => {
+      if (!isMounted) return;
+      setMessages((prev) => [...prev, data]);
     });
+  }
 
-    // BOT chào
-    setMessages([
-      {
-        sender: "BOT",
-        message: "Chào bạn! Tôi có thể giúp bạn tìm sản phẩm?",
-        products: [],
-      },
-    ]);
+  return () => {
+    isMounted = false;
+    clientRef.current?.deactivate();
+    clientRef.current = null;
+  };
+}, []);
 
-    // gửi tin nhắn chờ khi connect
-    const client = clientRef.current;
-    const interval = setInterval(() => {
-      if (client?.connected && pendingMessages.current.length > 0) {
-        pendingMessages.current.forEach((msg) => client.publish(msg));
-        pendingMessages.current = [];
-      }
-    }, 100);
-
-    return () => {
-      clearInterval(interval);
-      clientRef.current?.deactivate().catch((err) => {
-        console.error("Lỗi khi ngắt kết nối chat client:", err);
-      });
-    };
-  }, []);
 
   const sendMessage = (text: string) => {
     const msg = {
@@ -56,10 +42,13 @@ export const useChat = () => {
     if (clientRef.current?.connected) {
       clientRef.current.publish(msg);
     } else {
-      pendingMessages.current.push(msg); // đẩy vào queue nếu chưa connect
+      pendingMessages.current.push(msg);
     }
 
-    setMessages((prev) => [...prev, { sender: "USER", message: text, products: [] }]);
+    setMessages((prev) => [
+      ...prev,
+      { sender: "USER", message: text, products: [] },
+    ]);
   };
 
   return { messages, sendMessage };
