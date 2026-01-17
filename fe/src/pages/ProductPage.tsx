@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ProductList from "../components/product/ProductList";
 // import Breadcrumbs, { BreadcrumbItem } from "../components/common/Breadcrumb";
 // import default bình thường
@@ -11,18 +11,30 @@ import type { BreadcrumbItem } from "../components/common/Breadcrumb";
 import ProductFilter from "../components/product/ProductFilter";
 import { CATEGORY_MAP } from "../constants/categories";
 import type { ProductSort } from "../types/product-sort";
+import type { Brand } from "../types/brand";
 
 const ProductPage = () => {
   const { categorySlug } = useParams();
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") || undefined;
 
-  const categoryName = categorySlug
-    ? CATEGORY_MAP[categorySlug]
-    : undefined;
+  const categoryName = categorySlug ? CATEGORY_MAP[categorySlug] : undefined;
 
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [brandId, setBrandId] = useState<number>();
   const [minPrice, setMinPrice] = useState<number>();
   const [maxPrice, setMaxPrice] = useState<number>();
   const [sort, setSort] = useState<ProductSort>("newest");
+
+  useEffect(() => {
+    fetch("/api/brands", { credentials: "include" }) // gửi cookie cùng request
+      .then((res) => {
+        if (!res.ok) throw new Error("Không thể lấy brands");
+        return res.json();
+      })
+      .then(setBrands)
+      .catch(console.error);
+  }, []);
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: "Trang chủ", path: "/" },
@@ -40,6 +52,7 @@ const ProductPage = () => {
       <div className="flex gap-6">
         {/* SIDEBAR FILTER */}
         <ProductFilter
+          brands={brands}
           brandId={brandId}
           setBrandId={setBrandId}
           minPrice={minPrice}
@@ -57,6 +70,7 @@ const ProductPage = () => {
           </h1>
 
           <ProductList
+            keyword={keyword}
             categorySlug={categorySlug}
             brandId={brandId}
             minPrice={minPrice}

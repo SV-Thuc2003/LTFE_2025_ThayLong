@@ -2,6 +2,7 @@ package com.example.be.specification;
 
 import com.example.be.dto.request.ProductListRequest;
 import com.example.be.entity.Product;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -16,19 +17,45 @@ public class ProductSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             // Category
-            addEqual(predicates, cb, root.get("category").get("id"), request.getCategoryId());
-            addEqual(predicates, cb, root.get("category").get("slug"), request.getCategorySlug());
+            if (request.getCategoryId() != null) {
+                var categoryJoin = root.join("category", JoinType.LEFT);
+                predicates.add(cb.equal(categoryJoin.get("id"), request.getCategoryId()));
+            }
+
+            if (request.getCategorySlug() != null) {
+                var categoryJoin = root.join("category", JoinType.LEFT);
+                predicates.add(cb.equal(categoryJoin.get("slug"), request.getCategorySlug()));
+            }
 
             // Brand
-            addEqual(predicates, cb, root.get("brand").get("id"), request.getBrandId());
+            if (request.getBrandId() != null) {
+                var brandJoin = root.join("brand", JoinType.LEFT);
+                predicates.add(cb.equal(brandJoin.get("id"), request.getBrandId()));
+            }
 
             // Price
-            addPriceRange(predicates, cb, root.get("price"),
-                    request.getMinPrice(), request.getMaxPrice());
+            addPriceRange(
+                    predicates,
+                    cb,
+                    root.get("price"),
+                    request.getMinPrice(),
+                    request.getMaxPrice()
+            );
+            // SEARCH BY NAME
+            if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
+                predicates.add(
+                        cb.like(
+                                cb.lower(root.get("name")),
+                                "%" + request.getKeyword().toLowerCase() + "%"
+                        )
+                );
+            }
+
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 
     /* ================= HELPER METHODS ================= */
 

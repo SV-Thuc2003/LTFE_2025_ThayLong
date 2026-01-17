@@ -5,16 +5,18 @@ import type {
   ProductDetailResponse,
   Page
 } from '../types/product-response';
+import type { ProductSort } from '../types/product-sort';
 
 const API_URL = 'http://localhost:8080/api';
 
 export interface HomeProductRequest {
   page?: number;
   size?: number;
-  sort?: 'newest' | 'priceAsc' | 'priceDesc';
+  sort?: ProductSort;
 }
 
 export interface ProductListRequest {
+  keyword?: string;
   categoryId?: number;
   categorySlug?: string;
   brandId?: number;
@@ -22,7 +24,7 @@ export interface ProductListRequest {
   maxPrice?: number;
   page?: number;
   size?: number;
-  sort?: 'newest' | 'priceAsc' | 'priceDesc';
+  sort?: ProductSort;
 }
 
 /** HOME */

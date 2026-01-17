@@ -1,24 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { Brand } from "../../types/product";
 import type { ProductSort } from "../../types/product-sort";
 
 interface Props {
+  brands: Brand[];
+
   brandId?: number;
   setBrandId: (v?: number) => void;
+
   minPrice?: number;
   maxPrice?: number;
   setMinPrice: (v?: number) => void;
   setMaxPrice: (v?: number) => void;
+
   sort: ProductSort;
   setSort: (v: ProductSort) => void;
 }
-
-const brands = [
-  { id: 1, name: "Abbott" },
-  { id: 2, name: "Mead Johnson" },
-  { id: 3, name: "Vinamilk" },
-  { id: 4, name: "Friso" },
-  { id: 5, name: "Dumex" },
-];
 
 const pricePresets = [
   { label: "< 200.000", min: 0, max: 200000 },
@@ -37,6 +34,7 @@ const sortOptions: { label: string; value: ProductSort }[] = [
 ];
 
 const ProductFilter = ({
+  brands,
   brandId,
   setBrandId,
   minPrice,
@@ -54,6 +52,13 @@ const ProductFilter = ({
     maxPrice
   );
   const [localSort, setLocalSort] = useState<ProductSort>(sort);
+
+  useEffect(() => {
+    setLocalBrandId(brandId);
+    setLocalMinPrice(minPrice);
+    setLocalMaxPrice(maxPrice);
+    setLocalSort(sort);
+  }, [brandId, minPrice, maxPrice, sort]);
 
   const applyFilters = () => {
     setBrandId(localBrandId);
@@ -81,20 +86,26 @@ const ProductFilter = ({
         <h3 className="text-lg font-semibold mb-3 text-gray-700">
           Thương hiệu
         </h3>
-        <select
-          value={localBrandId ?? ""}
-          onChange={(e) =>
-            setLocalBrandId(e.target.value ? Number(e.target.value) : undefined)
-          }
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-        >
-          <option value="">Tất cả</option>
-          {brands.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.name}
-            </option>
-          ))}
-        </select>
+        {!brands.length ? (
+          <div className="h-10 bg-gray-200 animate-pulse rounded" />
+        ) : (
+          <select
+            value={localBrandId ?? ""}
+            onChange={(e) =>
+              setLocalBrandId(
+                e.target.value ? Number(e.target.value) : undefined
+              )
+            }
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+          >
+            <option value="">Tất cả</option>
+            {brands.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* PRICE */}

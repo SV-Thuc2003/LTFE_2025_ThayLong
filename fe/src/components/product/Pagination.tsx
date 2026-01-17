@@ -1,4 +1,3 @@
-// src/components/product/Pagination.tsx
 import React from "react";
 
 interface PaginationProps {
@@ -6,6 +5,25 @@ interface PaginationProps {
   totalPages: number;
   onChange: (page: number) => void;
 }
+
+// type PageItem = number | "dots";
+// const getPages =(
+//     current: number,
+//     total: number,
+//     maxVisible =5
+// ): PageItem[] =>{
+//     if (total <= maxVisible) {
+//         return  Array.from({length: total}, (_,i) =>i+1);
+//     }
+//     if(current <= 3) {
+//         return [1, 2, 3, 4, "dots", total];
+//     }
+//     if(current >= total-2) {
+//         return [1, "dots", total - 3, total - 2, total -1, total];
+//     }
+//     return [1, "dots", current - 1, current, current + 1, "dots", total];
+// };
+
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
