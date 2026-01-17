@@ -19,13 +19,11 @@ const ProductDetailPage = () => {
         <ProductInfo product={product} />
       </div>
 
-      {/* MÔ TẢ */}
-      <div className="mt-10">
+      {/* <div className="mt-10">
         <h2 className="text-xl font-semibold mb-2">Mô tả sản phẩm</h2>
         <p className="text-gray-700">{product.description}</p>
-      </div>
+      </div> */}
 
-      {/* THUỘC TÍNH */}
       <ProductAttributes attributes={product.attributes} />
     </div>
   );

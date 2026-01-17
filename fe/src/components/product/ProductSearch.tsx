@@ -1,4 +1,3 @@
-// src/components/product/ProductSearch.tsx
 import React from "react";
 
 interface ProductSearchProps {

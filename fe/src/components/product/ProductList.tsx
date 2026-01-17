@@ -5,6 +5,7 @@ import { useProducts } from "../../hooks/useProducts";
 import type { ProductSort } from '../../types/product-sort';
 
 interface ProductListProps {
+  keyword?: string;
   categorySlug?: string;
   brandId?: number;
   minPrice?: number;
@@ -15,6 +16,7 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({
+  keyword,
   categorySlug,
   brandId,
   minPrice,
@@ -26,6 +28,7 @@ const ProductList: React.FC<ProductListProps> = ({
   const [page, setPage] = useState(0);
 
   const { products, totalPages, loading, error } = useProducts({
+    keyword,
     categorySlug,
     brandId,
     minPrice,
