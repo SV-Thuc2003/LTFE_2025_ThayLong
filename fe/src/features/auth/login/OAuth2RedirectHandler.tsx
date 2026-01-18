@@ -23,7 +23,7 @@ const OAuth2RedirectHandler = () => {
 
     if (token && username && userId) {
       // login(parseInt(userId), username, token);
-       login(Number(userId), username, token);
+       login(username, token);
       navigate("/");
     } else {
       navigate("/login?error=missing_token");

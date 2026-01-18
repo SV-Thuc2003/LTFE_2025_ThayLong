@@ -1,13 +1,9 @@
-import { Outlet,useLocation  } from "react-router-dom";
 import  Header  from "../components/layout/header/Header";
 import  Footer  from "../components/layout/footer/Footer";
 import  ChatBox  from "../components/ChatBox";
+import { Outlet } from "react-router-dom";
 
 export const Layout = () => {
-  const location = useLocation();
-  const hideChatRoutes = ["/login", "/register"];
-  const shouldHideChat = hideChatRoutes.includes(location.pathname);
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -18,9 +14,7 @@ export const Layout = () => {
       </main>
 
       <Footer />
-
-      {!shouldHideChat && <ChatBox />}
-      {/* <ChatBox /> */}
+      <ChatBox />
     </div>
   );
 };

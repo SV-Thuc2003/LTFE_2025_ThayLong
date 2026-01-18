@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../contexts/AuthContext";
 const HeaderUser: React.FC = () => {
   const { isLoggedIn, username, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);

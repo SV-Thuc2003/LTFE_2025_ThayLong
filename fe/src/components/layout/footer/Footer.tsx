@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 // import logo from "../../../assets/logo.png";
 import { FaFacebook, FaInstagramSquare, FaYoutube } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
 
   return (
     <footer className="bg-[#f8fafc] py-16 border-t border-gray-200 text-gray-700">
@@ -15,10 +16,10 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center space-x-3 mb-5">
               {/* <img src={logo} alt="Milk Powder Store" className="h-12" /> */}
-              <h3 className="text-2xl font-extrabold text-gray-900">Milk Powder Store</h3>
+              <h3 className="text-2xl font-extrabold text-gray-900">{t('footer.brand')}</h3>
             </div>
             <p className="text-gray-600 mb-6 leading-relaxed text-sm">
-              Cửa hàng sữa bột chất lượng cao cho mọi gia đình.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-5">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-400 hover:text-blue-600 transition-colors">
@@ -38,26 +39,26 @@ const Footer: React.FC = () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">Công ty</h4>
+            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">{t('footer.companyTitle')}</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/about" className="text-sm hover:text-rose-600 transition-colors">
-                  Giới thiệu
+                <Link to="/about" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.about')}
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-sm hover:text-rose-600 transition-colors">
-                  Blog
+                <Link to="/blog" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.blog')}
                 </Link>
               </li>
               <li>
-                <Link to="/gift-cards" className="text-sm hover:text-rose-600 transition-colors">
-                  Thẻ quà tặng
+                <Link to="/gift-cards" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.giftCards')}
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="text-sm hover:text-rose-600 transition-colors">
-                  Tuyển dụng
+                <Link to="/careers" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.careers')}
                 </Link>
               </li>
             </ul>
@@ -65,26 +66,26 @@ const Footer: React.FC = () => {
 
           {/* Shop Links */}
           <div>
-            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">Mua sắm</h4>
+            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">{t('footer.linksTitle')}</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/new-products" className="text-sm hover:text-rose-600 transition-colors">
-                  Sản phẩm mới
+                <Link to="/new-products" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.newProducts')}
                 </Link>
               </li>
               <li>
-                <Link to="/best-sellers" className="text-sm hover:text-rose-600 transition-colors">
-                  Bán chạy
+                <Link to="/best-sellers" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.bestSellers')}
                 </Link>
               </li>
               <li>
-                <Link to="/discounts" className="text-sm hover:text-rose-600 transition-colors">
-                  Giảm giá
+                <Link to="/discounts" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.discounts')}
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-sm hover:text-rose-600 transition-colors">
-                  FAQ
+                <Link to="/faq" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.faq')}
                 </Link>
               </li>
             </ul>
@@ -92,26 +93,26 @@ const Footer: React.FC = () => {
 
           {/* Customer Service */}
           <div>
-            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">Hỗ trợ</h4>
+            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">{t('footer.serviceTitle')}</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/contact" className="text-sm hover:text-rose-600 transition-colors">
-                  Liên hệ
+                <Link to="/contact" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.contactUs')}
                 </Link>
               </li>
               <li>
-                <Link to="/shipping" className="text-sm hover:text-rose-600 transition-colors">
-                  Vận chuyển
+                <Link to="/shipping" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.shipping')}
                 </Link>
               </li>
               <li>
-                <Link to="/returns" className="text-sm hover:text-rose-600 transition-colors">
-                  Đổi trả
+                <Link to="/returns" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.returns')}
                 </Link>
               </li>
               <li>
-                <Link to="/order-tracking" className="text-sm hover:text-rose-600 transition-colors">
-                  Theo dõi đơn
+                <Link to="/order-tracking" className="text-sm hover:text-blue-600 transition-colors">
+                  {t('footer.orderTracking')}
                 </Link>
               </li>
             </ul>
@@ -119,18 +120,18 @@ const Footer: React.FC = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">Liên hệ</h4>
+            <h4 className="mb-6 text-gray-900 font-semibold tracking-wide">{t('footer.contact')}</h4>
             <address className="not-italic text-sm space-y-3 text-gray-600">
-              <p>123 Nguyễn Văn A, TP.HCM</p>
-              <p>0123 456 789</p>
-              <p>support@milkstore.com</p>
+              <p>{t('footer.address')}</p>
+              <p>{t('footer.phone')}</p>
+              <p>{t('footer.email')}</p>
             </address>
           </div>
         </div>
 
         {/* Bottom copyright and payment */}
         <div className="mt-16 border-t border-gray-200 pt-6 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
-          <p>© 2026 Milk Powder Store. All rights reserved.</p>
+          <p>{t('footer.copyright')}</p>
           <img
             src="/images/img_paymenticons_1.svg"
             alt="Payment Methods"
