@@ -5,7 +5,7 @@ import ProfileForm from "./ProfileForm";
 import type { UserProfile } from "../../types/Profile";
 import { fetchUserProfile } from "../../Service/updateUserProfile";
 import { toast } from "react-toastify";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 const ProfilePage = () => {
   const { userId } = useAuth();
