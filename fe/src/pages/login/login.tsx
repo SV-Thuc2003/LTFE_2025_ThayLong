@@ -1,11 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 // import { useTranslation } from "react-i18next"; // Tạm ẩn i18n
-<<<<<<< HEAD
 // import logologin from "../../assets/logologin.jpg";
 // import Header from "../../components/layout/header/Header";
-=======
->>>>>>> origin/main
+
 import LoginForm from "../../features/auth/login/LoginForm.tsx";
 import SocialLogin from "../../features/auth/login/SocialLogin.tsx";
 
