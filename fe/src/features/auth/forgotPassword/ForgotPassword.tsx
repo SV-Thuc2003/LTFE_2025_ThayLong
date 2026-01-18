@@ -4,15 +4,12 @@ import StepEmail from "./StepEmail";
 import StepOtp from "./StepOtp";
 import StepNewPassword from "./StepNewPassword";
 import logologin from "../../../assets/logologin.jpg";
-import { useTranslation } from 'react-i18next';
 
 const ForgotPassword: React.FC = () => {
-    const { t } = useTranslation(); // ✅ đặt ở đây nè
-
     const steps = [
-        t("auth.step_email"),
-        t("auth.step_otp"),
-        t("auth.step_new_password")
+        "Nhập Email",
+        "Xác thực OTP",
+        "Mật khẩu mới"
     ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -24,39 +21,48 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-        <div className="w-full md:w-1/2 flex items-center justify-center">
+        <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-50">
           <div className="w-full max-w-[800px] flex items-center justify-center">
             <img
               src={logologin}
-              alt="Pet illustration"
-              className="w-full h-auto  object-contain"
+              alt="Hình ảnh minh họa"
+              className="w-full h-auto object-contain"
             />
           </div>
         </div>
-        <div className="w-full max-w-md p-8 md:p-16 flex flex-col items-center justify-center">
-          <div className="w-full max-w-[900px]">
-            <Stepper steps={steps} currentStep={currentStep} />
-          {currentStep === 0 && (
-            <StepEmail
-              email={email}
-              setEmail={setEmail}
-              onSuccess={() => {
-                handleNext();
-              }}
-            />
-          )}
-          {currentStep === 1 && (
-            <StepOtp
-              email={email}
-              otp={otp}
-              setOtp={setOtp}
-              onSuccess={handleNext}
-              onBack={handlePrev}
-            />
-          )}
-          {currentStep === 2 && (
-            <StepNewPassword email={email} otp={otp} onBack={handlePrev} />
-          )}
+
+        <div className="w-full md:w-1/2 p-8 md:p-16 flex flex-col items-center justify-center">
+          <div className="w-full max-w-md">
+            <div className="mb-10">
+                <Stepper steps={steps} currentStep={currentStep} />
+            </div>
+
+            {/* Bước 0: Nhập email để lấy lại mật khẩu */}
+            {currentStep === 0 && (
+                <StepEmail
+                  email={email}
+                  setEmail={setEmail}
+                  onSuccess={() => {
+                    handleNext();
+                  }}
+                />
+            )}
+
+            {/* Bước 1: Xác thực mã OTP */}
+            {currentStep === 1 && (
+                <StepOtp
+                  email={email}
+                  otp={otp}
+                  setOtp={setOtp}
+                  onSuccess={handleNext}
+                  onBack={handlePrev}
+                />
+            )}
+
+            {/* Bước 2: Thiết lập mật khẩu mới */}
+            {currentStep === 2 && (
+                <StepNewPassword email={email} otp={otp} onBack={handlePrev} />
+            )}
           </div>
         </div>
     </div>

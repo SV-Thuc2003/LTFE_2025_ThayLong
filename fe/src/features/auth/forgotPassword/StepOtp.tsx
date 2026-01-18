@@ -3,7 +3,6 @@ import InputField from "../../../components/common/InputField";
 import Button from "../../../components/common/Button";
 import { toast } from "react-toastify";
 import { verifyOtpResetPassword } from "../../../Service/authService";
-import { useTranslation } from "react-i18next";
 
 interface Props {
   email: string;
@@ -15,17 +14,16 @@ interface Props {
 
 const StepOtp: React.FC<Props> = ({ email, otp, setOtp, onSuccess, onBack }) => {
   const [verifying, setVerifying] = useState(false);
-  const { t } = useTranslation();
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setVerifying(true);
     try {
       await verifyOtpResetPassword({ email, otpCode: otp });
-      toast.success(t("auth.otp_verify_success"));
+      toast.success("Xác thực mã OTP thành công!");
       onSuccess();
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || t("auth.otp_verify_failed"));
+      toast.error(err?.response?.data?.message || "Mã OTP không chính xác hoặc đã hết hạn.");
     } finally {
       setVerifying(false);
     }
@@ -34,18 +32,18 @@ const StepOtp: React.FC<Props> = ({ email, otp, setOtp, onSuccess, onBack }) => 
   return (
       <form onSubmit={handleVerify} className="space-y-4">
         <InputField
-            label={t("auth.otp")}
-            placeholder={t("auth.enter_otp")}
+            label="Mã xác thực OTP"
+            placeholder="Nhập mã OTP đã gửi đến email"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             required
         />
         <div className="flex gap-2">
           <Button type="button" onClick={onBack} variant="secondary" className="flex-1">
-            {t("common.back")}
+            Quay lại
           </Button>
           <Button type="submit" className="flex-1" disabled={verifying}>
-            {verifying ? t("auth.verifying") : t("auth.verify")}
+            {verifying ? "Đang xác thực..." : "Xác nhận"}
           </Button>
         </div>
       </form>

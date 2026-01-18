@@ -4,7 +4,6 @@ import Button from "../../components/common/Button";
 import InputField from "../../components/common/InputField";
 import { CgProfile } from "react-icons/cg";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
-import { useTranslation } from "react-i18next";
 
 interface ProfileFormProps {
   userId: number;
@@ -15,7 +14,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                                                    userId,
                                                    initialProfile,
                                                  }) => {
-  const { t } = useTranslation();
   const { updateProfile, loading } = useUpdateProfile();
   const [profile, setProfile] = useState<UserProfile>(initialProfile);
   const [errors, setErrors] = useState<
@@ -34,9 +32,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof UserProfile, string>> = {};
 
-    if (!profile.name.trim()) newErrors.name = t("profile.errors.nameRequired");
-    if (!profile.phone.trim()) newErrors.phone = t("profile.errors.phoneRequired");
-    if (!profile.address?.trim()) newErrors.address = t("profile.errors.addressRequired");
+    if (!profile.name.trim()) newErrors.name = "Vui lòng nhập họ và tên";
+    if (!profile.phone.trim()) newErrors.phone = "Vui lòng nhập số điện thoại";
+    if (!profile.address?.trim()) newErrors.address = "Vui lòng nhập địa chỉ";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -49,52 +47,57 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   };
 
   return (
-      <div className="bg-[#f8f9fa] p-8 rounded-2xl">
+      <div className="bg-[#f8f9fa] p-8 rounded-2xl shadow-sm border border-gray-100">
         <div className="flex items-center mb-8">
-          <div className="w-[68px] h-[68px] bg-[#fd7e14] rounded-full flex items-center justify-center">
+          <div className="w-[68px] h-[68px] bg-[#fd7e14] rounded-full flex items-center justify-center text-white">
             <CgProfile className="w-[40px] h-[40px]" />
           </div>
           <div className="ml-4">
-            <h2 className="text-xl font-medium">{profile.name}</h2>
-            <p className="text-gray-500">{profile.phone}</p>
+            <h2 className="text-xl font-semibold text-[#313f53]">{profile.name || "Người dùng"}</h2>
+            <p className="text-gray-500">{profile.phone || "Chưa cập nhật SĐT"}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             <InputField
-                label={t("profile.fields.name")}
+                label="Họ và tên"
                 name="name"
                 value={profile.name}
                 onChange={handleInputChange}
-                placeholder={t("profile.placeholders.name")}
+                placeholder="Nhập họ và tên của bạn"
                 error={errors.name}
             />
 
             <InputField
-                label={t("profile.fields.phone")}
+                label="Số điện thoại"
                 name="phone"
                 value={profile.phone}
                 onChange={handleInputChange}
-                placeholder={t("profile.placeholders.phone")}
+                placeholder="Nhập số điện thoại"
                 error={errors.phone}
             />
 
             <div className="md:col-span-2">
               <InputField
-                  label={t("profile.fields.address")}
+                  label="Địa chỉ"
                   name="address"
                   value={profile.address ?? ""}
                   onChange={handleInputChange}
-                  placeholder={t("profile.placeholders.address")}
+                  placeholder="Nhập địa chỉ chi tiết"
                   error={errors.address}
               />
             </div>
           </div>
 
           <div className="mt-8">
-            <Button type="submit" variant="primary" className="px-8 py-2" disabled={loading}>
-              {loading ? t("profile.saving") : t("profile.save")}
+            <Button
+              type="submit"
+              variant="primary"
+              className="px-10 py-2.5 rounded-lg font-medium transition-all"
+              disabled={loading}
+            >
+              {loading ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
           </div>
         </form>

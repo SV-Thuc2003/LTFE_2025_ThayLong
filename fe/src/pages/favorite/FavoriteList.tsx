@@ -21,7 +21,6 @@ interface Props {
 }
 
 const FavoriteList: React.FC<Props> = ({ userId }) => {
-  const { t } = useTranslation();
   const [favorites, setFavorites] = useState<FavoriteResponse[]>([]);
   const { addToCart } = useCart();
   const { isFavorite, toggleFavorite, loading } = useFavorites();
@@ -34,38 +33,37 @@ const FavoriteList: React.FC<Props> = ({ userId }) => {
           setFavorites(res.data);
         } else {
           setFavorites([]);
-          console.warn(t("favorite.invalidData"));
+          console.warn("Dữ liệu danh sách yêu thích không hợp lệ.");
         }
       } catch (err) {
-        console.error(t("favorite.loadError"), err);
+        console.error("Lỗi khi tải danh sách yêu thích:", err);
         setFavorites([]);
       }
     };
 
     fetchFavorites();
-  }, [userId, t]);
+  }, [userId]);
 
   if (loading)
     return (
         <>
-          <Header />
-          <div className="text-center mt-6">{t("favorite.loading")}</div>
+          <div className="text-center mt-6">Đang tải danh sách yêu thích...</div>
           <Footer />
         </>
     );
 
   return (
       <>
-        <Header />
+        {/* Đã loại bỏ Header theo yêu cầu */}
         <main className="min-h-[90vh] px-4 py-6 flex justify-center">
           <div className="w-full max-w-[1440px] px-6 py-6 shadow-md rounded-[40px] bg-white">
             <h2 className="text-2xl font-bold mb-4 text-center">
-              {t("favorite.title")}
+              Sản phẩm yêu thích
             </h2>
 
             {favorites.length === 0 ? (
                 <div className="text-center mt-6 text-gray-500">
-                  {t("favorite.empty")}
+                  Bạn chưa có sản phẩm yêu thích nào.
                 </div>
             ) : (
                 <div className="flex flex-col space-y-6">
@@ -89,10 +87,10 @@ const FavoriteList: React.FC<Props> = ({ userId }) => {
                           <div className="flex gap-3 mt-2">
                             <button
                                 onClick={() => addToCart(fav.productId, 1)}
-                                className="flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm"
+                                className="flex items-center px-3 py-1 bg-[#fd7e14] text-white rounded-md hover:bg-[#e66f10] text-sm transition"
                             >
                               <FiShoppingCart className="mr-1" />
-                              {t("favorite.addToCart")}
+                              Thêm vào giỏ hàng
                             </button>
 
                             <button
@@ -100,8 +98,8 @@ const FavoriteList: React.FC<Props> = ({ userId }) => {
                                 className="text-red-500 text-xl hover:scale-110 transition"
                                 title={
                                   isFavorite(fav.productId)
-                                      ? t("favorite.remove")
-                                      : t("favorite.add")
+                                      ? "Xóa khỏi yêu thích"
+                                      : "Thêm vào yêu thích"
                                 }
                             >
                               {isFavorite(fav.productId) ? <FaHeart /> : <FaRegHeart />}
