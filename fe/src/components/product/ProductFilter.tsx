@@ -173,13 +173,13 @@ const ProductFilter = ({
       <div className="flex space-x-2">
         <button
           onClick={applyFilters}
-          className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition"
+          className="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 rounded-md transition cursor-pointer"
         >
           Áp dụng
         </button>
         <button
           onClick={resetFilters}
-          className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-md transition"
+          className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 rounded-md transition cursor-pointer"
         >
           Xóa bộ lọc
         </button>
