@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { CiShoppingCart } from "react-icons/ci";
-import { useCart } from "../../../contexts/useCart";
+import { useCart } from "../../../hooks/useCart.tsx";
 
 const HeaderCart: React.FC = () => {
   const { cartItems } = useCart();

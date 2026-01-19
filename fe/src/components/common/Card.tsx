@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 

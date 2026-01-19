@@ -13,7 +13,6 @@ interface RegistrationFormProps {
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
-    // Không dùng i18n nữa
 
     const [formData, setFormData] = useState<RegisterFormData>({
         username: "",

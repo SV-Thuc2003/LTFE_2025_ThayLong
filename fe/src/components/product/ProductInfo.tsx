@@ -1,5 +1,5 @@
 import type { ProductDetailResponse } from "../../types/product-response";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 
 interface Props {
   product: ProductDetailResponse;
@@ -40,7 +40,7 @@ const ProductInfo = ({ product }: Props) => {
               alert("Có lỗi xảy ra, vui lòng thử lại.");
             }
           }}
-          className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors"
+          className="bg-rose-600 text-white px-6 py-3 rounded hover:bg-rose-700 transition-colors cursor-pointer"
         >
           Thêm vào giỏ hàng
         </button>
