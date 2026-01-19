@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../components/layout/footer/footer";
 import { FaHeart, FaTrash } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 import { useFavorites } from "../../hooks/useFavorite";
 import axios from "../../Service/axios";
 import { Link } from "react-router-dom";

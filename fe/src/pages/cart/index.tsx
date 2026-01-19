@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import CartSection from "./CartSection";
 import CartSummary from "./CartSummary";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 
 const CartCheckOut: React.FC = () => {
   const navigate = useNavigate();

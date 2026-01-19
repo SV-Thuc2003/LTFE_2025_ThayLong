@@ -9,7 +9,7 @@ import type { CheckoutState, PersonalInfo, ShippingAddress } from "../../types/c
 import type { CartItem } from "../../types/cart";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 
 const Checkout: React.FC = () => {
     const navigate = useNavigate();

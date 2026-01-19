@@ -1,5 +1,5 @@
 import type { ProductDetailResponse } from "../../types/product-response";
-import { useCart } from "../../contexts/useCart";
+import { useCart } from "../../hooks/useCart.tsx";
 
 interface Props {
   product: ProductDetailResponse;
