@@ -5,7 +5,7 @@ import Button from "../../../components/common/Button.tsx";
 import { verifyOtp, resendOtp } from "../../../Service/authService.ts";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { useTranslation } from "react-i18next";
+
 
 interface OptInoutProps {
   email: string;
@@ -17,7 +17,7 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
   const [resendMessage, setResendMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  // const { t } = useTranslation();
+
   const navigate = useNavigate();
 
   const handleVerify = async (e: React.FormEvent) => {
@@ -31,11 +31,11 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
     setIsVerifying(true);
     try {
       const data = await verifyOtp({ email, otpCode });
-      toast.success(data.message || "Xác thực OTP thành công");
+      toast.success(data.message || "Xác thực thành công!");
       if (onSuccess) onSuccess();
       navigate("/login");
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Xác thực OTP thất bại");
+      toast.error(error?.response?.data?.message || "Xác thực thất bại. Vui lòng thử lại.");
     } finally {
       setIsVerifying(false);
     }
@@ -45,11 +45,11 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
     setIsResending(true);
     try {
       const data = await resendOtp(email);
-      const msg = data.message || "Gửi lại OTP thành công";
+      const msg = data.message || "Đã gửi lại mã OTP thành công.";
       setResendMessage(msg);
       toast.success(msg);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Gửi lại OTP thất bại");
+      toast.error(error?.response?.data?.message || "Gửi lại OTP thất bại.");
     } finally {
       setIsResending(false);
     }
@@ -65,14 +65,14 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
             Xác thực OTP
           </h2>
           <p className="mb-6 text-center text-gray-700">
-            Vui lòng nhập mã OTP đã được gửi tới <strong>{email}</strong>
+            Vui lòng nhập mã OTP đã được gửi đến email <strong>{email}</strong>
           </p>
 
           <InputField
               type="text"
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="Nhập mã OTP"
+              placeholder="Nhập mã xác thực..."
               required
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
           />
@@ -83,11 +83,11 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
               variant="primary"
               disabled={isVerifying}
           >
-            {isVerifying ? "Đang xác thực..." : "Xác nhận"}
+            {isVerifying ? "Đang xác thực..." : "Xác thực"}
           </Button>
 
           <div className="text-center">
-            <p className="mb-2 text-gray-600">Không nhận được mã OTP?</p>
+            <p className="mb-2 text-gray-600">Bạn không nhận được mã?</p>
             <Button
                 type="button"
                 variant="secondary"

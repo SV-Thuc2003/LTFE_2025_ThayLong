@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { IconType } from "react-icons";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaClipboardList } from "react-icons/fa";
@@ -15,7 +15,7 @@ interface SidebarItem {
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const sidebarItems: SidebarItem[] = [
     {
       icon: IoHomeOutline,
@@ -25,17 +25,17 @@ const Sidebar: React.FC = () => {
     {
       icon: FaClipboardList,
       label: 'Đơn hàng của tôi',
-      path: '/profile/orders'
+      path: '/orders'
     },
     {
       icon: MdSecurity,
       label: 'Bảo mật tài khoản',
-      path: '/profile/security'
+      path: '/security'
     },
     {
       icon: AiOutlineHeart,
       label: 'Danh sách yêu thích',
-      path: '/profile/favorites'
+      path: '/favorites'
     },
     {
       icon: FiLogOut,
@@ -47,7 +47,10 @@ const Sidebar: React.FC = () => {
   const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.currentTarget.getAttribute('href') === '/logout') {
       e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       console.log('Đang đăng xuất...');
+      navigate('/login');
     }
   };
 
