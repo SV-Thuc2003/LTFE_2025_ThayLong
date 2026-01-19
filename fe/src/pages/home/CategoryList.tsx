@@ -22,7 +22,7 @@ const CategoryList = () => {
             className="
               bg-white border rounded-lg px-4 py-6
               text-center font-medium
-              hover:border-blue-500 hover:text-blue-600
+              hover:border-rose-500 hover:text-rose-600
               hover:shadow-sm transition
             "
           >

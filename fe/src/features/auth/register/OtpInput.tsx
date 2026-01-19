@@ -5,7 +5,7 @@ import Button from "../../../components/common/Button.tsx";
 import { verifyOtp, resendOtp } from "../../../Service/authService.ts";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 interface OptInoutProps {
   email: string;
@@ -17,25 +17,25 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
   const [resendMessage, setResendMessage] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!otpCode.trim()) {
-      toast.warning(t("otp.enter_warning"));
+      toast.warning("Vui lòng nhập mã OTP");
       return;
     }
 
     setIsVerifying(true);
     try {
       const data = await verifyOtp({ email, otpCode });
-      toast.success(data.message || t("otp.success"));
+      toast.success(data.message || "Xác thực OTP thành công");
       if (onSuccess) onSuccess();
       navigate("/login");
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || t("otp.failed"));
+      toast.error(error?.response?.data?.message || "Xác thực OTP thất bại");
     } finally {
       setIsVerifying(false);
     }
@@ -45,11 +45,11 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
     setIsResending(true);
     try {
       const data = await resendOtp(email);
-      const msg = data.message || t("otp.resend_success");
+      const msg = data.message || "Gửi lại OTP thành công";
       setResendMessage(msg);
       toast.success(msg);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || t("otp.resend_failed"));
+      toast.error(error?.response?.data?.message || "Gửi lại OTP thất bại");
     } finally {
       setIsResending(false);
     }
@@ -62,17 +62,17 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
             onSubmit={handleVerify}
         >
           <h2 className="text-2xl font-semibold mb-4 text-center">
-            {t("otp.title")}
+            Xác thực OTP
           </h2>
           <p className="mb-6 text-center text-gray-700">
-            {t("otp.instructions")} <strong>{email}</strong>
+            Vui lòng nhập mã OTP đã được gửi tới <strong>{email}</strong>
           </p>
 
           <InputField
               type="text"
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value)}
-              placeholder={t("otp.placeholder")}
+              placeholder="Nhập mã OTP"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
           />
@@ -83,11 +83,11 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
               variant="primary"
               disabled={isVerifying}
           >
-            {isVerifying ? t("otp.verifying") : t("otp.verify")}
+            {isVerifying ? "Đang xác thực..." : "Xác nhận"}
           </Button>
 
           <div className="text-center">
-            <p className="mb-2 text-gray-600">{t("otp.not_received")}</p>
+            <p className="mb-2 text-gray-600">Không nhận được mã OTP?</p>
             <Button
                 type="button"
                 variant="secondary"
@@ -95,7 +95,7 @@ const OptInout: React.FC<OptInoutProps> = ({ email, onSuccess }) => {
                 className="inline-block px-4 py-2 text-sm font-medium text-green-700 bg-green-100 rounded hover:bg-green-200"
                 disabled={isResending}
             >
-              {isResending ? t("otp.resending") : t("otp.resend")}
+              {isResending ? "Đang gửi lại..." : "Gửi lại OTP"}
             </Button>
             {resendMessage && (
                 <p className="mt-2 text-sm text-green-600">{resendMessage}</p>
