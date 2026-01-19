@@ -40,7 +40,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
                     variant="primary"
                     onClick={onProceedToCheckout}
                     fullWidth
-                    className="uppercase py-2 text-xl"
+                    className="uppercase py-2 text-xl bg-red-600 hover:bg-rose-700"
                 >
                     {('Thanh toán')}
                 </Button>
