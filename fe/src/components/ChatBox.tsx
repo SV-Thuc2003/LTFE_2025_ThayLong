@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { FaCommentDots } from "react-icons/fa";
 
 const ChatBox = () => {
+  const navigate = useNavigate();
+
   const { messages, sendMessage } = useChat();
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const handleSend = () => {
     if (!input.trim()) return;
     sendMessage(input);
     setInput("");
   };
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="fixed bottom-4 right-4">
@@ -42,8 +50,8 @@ const ChatBox = () => {
                   {msg.products?.map((p) => (
                     <a
                       key={p.slug}
-                      href={`/product/${p.slug}`}
-                      className="flex items-center gap-2 border rounded mt-2 p-1 bg-white hover:bg-gray-50"
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                      className="group flex items-center gap-2 border rounded mt-2 p-1 bg-white hover:bg-gray-50 cursor-pointer transition"
                     >
                       <img
                         src={p.thumbnail || "/placeholder.png"}
@@ -51,14 +59,19 @@ const ChatBox = () => {
                       />
 
                       <div>
-                        <p className="text-sm font-medium">{p.name}</p>
-                        <p className="text-xs text-red-500">{p.price} đ</p>
+                        <p className="text-sm font-medium group-hover:text-rose-600 transition">
+                          {p.name}
+                        </p>
+                        <p className="text-xs text-red-500 group-hover:text-red-600 transition">
+                          {p.price} đ
+                        </p>
                       </div>
                     </a>
                   ))}
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="p-2 flex gap-2 text-xs">
@@ -107,7 +120,6 @@ const ChatBox = () => {
       )}
     </div>
   );
-
 };
 
 export default ChatBox;
