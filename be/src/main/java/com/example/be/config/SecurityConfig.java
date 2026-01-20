@@ -112,7 +112,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
 //        cho phép nguồn gốc từ React dev server
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "https://ltfe-2025-thay-long-w9pf.vercel.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "https://milkpowder-shop.onrender.com", "https://ltfe-2025-thay-long-w9pf.vercel.app"));
 //        cho phép các phương thức HTTP  thông dụng
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 //        cho phép mọi header
