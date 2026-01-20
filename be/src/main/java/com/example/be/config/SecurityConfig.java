@@ -116,7 +116,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
                 "https://*.vercel.app",
-                "https://milkpowder-shop.onrender.com"
+                "https://ltfe-be.onrender.com"
         ));
 
         configuration.setAllowedMethods(List.of(
