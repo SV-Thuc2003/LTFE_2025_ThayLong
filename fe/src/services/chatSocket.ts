@@ -1,12 +1,14 @@
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
+const WS_URL = import.meta.env.VITE_WS_URL;
+
 export const createChatClient = (onMessage: (msg: any) => void) => {
   const token = localStorage.getItem("token");
 
   const client = new Client({
     webSocketFactory: () =>
-      new SockJS("http://localhost:8080/ws-chat"),
+      new SockJS(`${WS_URL}/ws-chat`),
 
     connectHeaders: {
       Authorization: `Bearer ${token}`, 
