@@ -40,7 +40,7 @@ const Checkout: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!userId || !token) return;
 
-        axios.get(`/api/cart/${userId}`, {
+        axios.get(`/cart/${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
         })
@@ -130,7 +130,7 @@ const Checkout: React.FC = () => {
 
         if (checkoutState.paymentMethod === "vnpay") {
             try {
-                const qrRes = await axios.get(`/api/payment/qr`, {
+                const qrRes = await axios.get(`/payment/qr`, {
                     params: { amount },
                     withCredentials: true
                 });
@@ -147,7 +147,7 @@ const Checkout: React.FC = () => {
             }
         } else {
             try {
-                await axios.post("/api/orders", orderPayload, {
+                await axios.post("/orders", orderPayload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 clearCart();
@@ -212,7 +212,7 @@ const Checkout: React.FC = () => {
                     amount={qrData.amount}
                     payload={qrData.payload}
                     onConfirm={async (payload) => {
-                        await axios.post("/api/orders", payload, {
+                        await axios.post("/orders", payload, {
                             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                             withCredentials: true
                         });
