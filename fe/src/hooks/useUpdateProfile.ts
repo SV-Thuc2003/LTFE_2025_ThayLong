@@ -6,17 +6,18 @@ import { toast } from "react-toastify";
 export const useUpdateProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  // const [success, setSuccess] = useState<boolean>(false);
 
-  const updateProfile = async (userId: number, data: UserProfile) => {
+  const updateProfile = async (userId: number, data: UserProfile, onSuccess?: () => void) => {
     setLoading(true);
     setError(null);
-    setSuccess(false);
+    // setSuccess(false);
 
     try {
       const message = await updateUserProfile(userId, data);
       toast.success(message || "Cập nhật thành công!");
-      setSuccess(true);
+      onSuccess?.();
+      // setSuccess(true);
     } catch (err: any) {
       const msg =
         err?.response?.data?.message || "Cập nhật thất bại. Vui lòng thử lại.";
@@ -27,5 +28,5 @@ export const useUpdateProfile = () => {
     }
   };
 
-  return { updateProfile, loading, error, success };
+  return { updateProfile, loading, error }; //success
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/layout/footer/footer";
+import Footer from "../../components/layout/footer/Footer";
 import AccountMenu from "./AccountMenu";
 import ProfileForm from "./ProfileForm";
 import type { UserProfile } from "../../types/Profile";

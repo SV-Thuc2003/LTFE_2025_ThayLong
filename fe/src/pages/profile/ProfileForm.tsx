@@ -8,11 +8,13 @@ import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 interface ProfileFormProps {
   userId: number;
   initialProfile: UserProfile;
+  onSuccess: () => void;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({
                                                    userId,
                                                    initialProfile,
+                                                   onSuccess,
                                                  }) => {
   const { updateProfile, loading } = useUpdateProfile();
   const [profile, setProfile] = useState<UserProfile>(initialProfile);
@@ -43,7 +45,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    updateProfile(userId, profile);
+    updateProfile(userId, profile, onSuccess);
   };
 
   return (
