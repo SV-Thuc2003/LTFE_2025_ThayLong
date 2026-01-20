@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from "../Service/axios";
 import type {
   ProductHomeResponse,
   ProductListResponse,
@@ -8,7 +9,7 @@ import type {
 import type { ProductSort } from '../types/product-sort';
 
 // const API_URL = 'http://localhost:8080/api';
-const API_URL = import.meta.env.VITE_API_URL;
+// const API_URL = import.meta.env.VITE_API_URL;
 
 export interface HomeProductRequest {
   page?: number;
@@ -30,20 +31,21 @@ export interface ProductListRequest {
 
 /** HOME */
 export const getHomeProducts = (data: HomeProductRequest) =>
-  axios.post<Page<ProductHomeResponse>>(
-    `${API_URL}/home/products`,
+  axiosInstance.post<Page<ProductHomeResponse>>(
+    // `${API_URL}/home/products`,
+    `/home/products`,
     data
   ).then(res => res.data);
 
 /** PRODUCT LIST */
 export const getProducts = (data: ProductListRequest) =>
-  axios.post<Page<ProductListResponse>>(
-    `${API_URL}/products`,
+  axiosInstance.post<Page<ProductListResponse>>(
+    `/products`,
     data
   ).then(res => res.data);
 
 /** PRODUCT DETAIL */
 export const getProductDetail = (slug: string) =>
-  axios.get<ProductDetailResponse>(
-    `${API_URL}/products/${slug}`
+  axiosInstance.get<ProductDetailResponse>(
+    `/products/${slug}`
   ).then(res => res.data);
