@@ -27,7 +27,7 @@ const ProductPage = () => {
   const [sort, setSort] = useState<ProductSort>("newest");
 
   useEffect(() => {
-    fetch("/brands", { credentials: "include" }) // gửi cookie cùng request
+    fetch("/brands", { credentials: "include",cache: "no-store"}) // gửi cookie cùng request
       .then((res) => {
         if (!res.ok) throw new Error("Không thể lấy brands");
         return res.json();
