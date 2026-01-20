@@ -1,11 +1,18 @@
 // src/services/authService.ts
 
-import axios, { AxiosError } from "axios";
+// import axios, { AxiosError } from "axios";
+// src/services/authService.ts
+import axiosInstance from "./axios";
+import { AxiosError } from "axios";
+
+
+
 import type { RegisterFormData } from '../types/Register';
 import type {LoginCredentials, LoginResponse} from "../types/Login";
 
 // const API_URL = 'http://localhost:8080/api/auth'; // hoặc lấy từ .env
-const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
+// const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
+const API_URL = "/auth";
 
 //Call api của register
 export const register = async (formData: RegisterFormData): Promise<string> => {
@@ -18,7 +25,7 @@ export const register = async (formData: RegisterFormData): Promise<string> => {
             phone: formData.phone || '',
         };
 
-        const response = await axios.post<{ message: string }>(
+        const response = await axiosInstance.post<{ message: string }>(
             `${API_URL}/register`,
             payload
         );
@@ -39,13 +46,13 @@ interface VerifyOtpParams {
 
 // Hàm xác thực OTP
 export const verifyOtp = async ({ email, otpCode }: VerifyOtpParams): Promise<any> => {
-  const response = await axios.post(`${API_URL}/verify-otp`, { email, otpCode });
+  const response = await axiosInstance.post(`${API_URL}/verify-otp`, { email, otpCode });
   return response.data;
 };
 
 // Hàm gửi lại OTP
 export const resendOtp = async (email: string): Promise<any> => {
-  const response = await axios.post(`${API_URL}/resend-otp`, null, {
+  const response = await axiosInstance.post(`${API_URL}/resend-otp`, null, {
     params: { email }
   });
   return response.data;
@@ -55,7 +62,7 @@ export const login = async (
   credentials: LoginCredentials
 ): Promise<LoginResponse> => {
   try {
-    const response = await axios.post<LoginResponse>(
+    const response = await axiosInstance.post<LoginResponse>(
       `${API_URL}/login`,
       credentials
     );
@@ -68,7 +75,7 @@ export const login = async (
 };
 
 export const forgotPassword = async (email: string): Promise<string> => {
-    const response = await axios.post(`${API_URL}/forgot-password`, null, {
+    const response = await axiosInstance.post(`${API_URL}/forgot-password`, null, {
         params: { email },
     });
     return response.data;
@@ -85,7 +92,7 @@ export const verifyOtpResetPassword = async ({
   otpCode,
 }: VerifyOtpResetPasswordParams): Promise<string> => {
   try {
-    const response = await axios.post<string>(
+    const response = await axiosInstance.post<string>(
       `${API_URL}/verify-otp-reset-password`,
       { email, otpCode }
     );
@@ -99,7 +106,7 @@ export const verifyOtpResetPassword = async ({
 };
 
 export const resetPassword = async (email: string, otpCode: string, newPassword: string): Promise<string> => {
-    const response = await axios.post(`${API_URL}/reset-password`, {
+    const response = await axiosInstance.post(`${API_URL}/reset-password`, {
         email,
         otpCode,
         newPassword,
