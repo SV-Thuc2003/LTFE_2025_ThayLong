@@ -15,6 +15,7 @@ const ProductCard = ({ product }: Props) => {
           src={product.thumbnail}
           alt={product.name}
           className="w-full h-40 object-contain mb-2 transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
         />
 
         <h3 className="text-sm font-medium line-clamp-2 min-h-[40px] transition-colors group-hover:text-rose-600">
