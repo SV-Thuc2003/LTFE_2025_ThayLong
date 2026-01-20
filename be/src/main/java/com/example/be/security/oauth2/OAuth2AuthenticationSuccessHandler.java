@@ -64,7 +64,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             response.addCookie(cookie);
             // Chuyển hướng về frontend (không truyền token trên URL để bảo mật cao hơn)
             String redirectUrl = UriComponentsBuilder
-                    .fromUriString(appProperties.getOauth2().getRedirectUri()) // http://localhost:5173/oauth2/redirect
+                    .fromUriString("https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect") // http://localhost:5173/oauth2/redirect
                     .queryParam("token", token)
                     .queryParam("username", username)
                     .queryParam("role", role)
