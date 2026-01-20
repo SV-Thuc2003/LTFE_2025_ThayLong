@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/layout/footer/footer";
+import Footer from "../../components/layout/footer/Footer";
 import { FaHeart, FaTrash } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { useCart } from "../../hooks/useCart.tsx";
@@ -15,28 +15,32 @@ interface FavoriteResponse {
   productPrice: number;
   productSlug: string;
 }
+interface FavoriteListProps {
+  userId: number;
+}
 
-const FavoriteList: React.FC = () => {
+
+const FavoriteList: React.FC <FavoriteListProps> = ({ userId }) => {
   const [favorites, setFavorites] = useState<FavoriteResponse[]>([]);
   const { addToCart } = useCart();
   const { toggleFavorite } = useFavorites();
   const [loadingLocal, setLoadingLocal] = useState(true);
 
   //Lấy userId từ localStorage
-  const getUserId = () => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        return user.id;
-      } catch (e) {
-        return null;
-      }
-    }
-    return null;
-  };
+  // const getUserId = () => {
+  //   const userStr = localStorage.getItem("user");
+  //   if (userStr) {
+  //     try {
+  //       const user = JSON.parse(userStr);
+  //       return user.id;
+  //     } catch (e) {
+  //       return null;
+  //     }
+  //   }
+  //   return null;
+  // };
 
-  const userId = getUserId();
+  // const userId = getUserId();
 
   useEffect(() => {
     const fetchFavorites = async () => {
