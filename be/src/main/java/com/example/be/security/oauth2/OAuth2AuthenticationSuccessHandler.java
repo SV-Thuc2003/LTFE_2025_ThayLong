@@ -63,17 +63,25 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             // Thêm cookie vào phản hồi
             response.addCookie(cookie);
             // Chuyển hướng về frontend (không truyền token trên URL để bảo mật cao hơn)
-            String redirectUrl = UriComponentsBuilder
-                    .fromUriString("https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect") // http://localhost:5173/oauth2/redirect
-                    .queryParam("token", token)
-                    .queryParam("username", username)
-                    .queryParam("role", role)
-                    .queryParam("userId", user.getId())
-                    .encode()
-                    .build().toUriString();
+            String redirectUrl =
+                    "https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect"
+                            + "?token=" + token
+                            + "&userId=" + user.getId();
 
+            System.out.println("REDIRECT TO FE = " + redirectUrl);
             response.sendRedirect(redirectUrl);
-            System.out.println("Redirect URL with token: " + redirectUrl);
+
+//            String redirectUrl = UriComponentsBuilder
+//                    .fromUriString("https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect") // http://localhost:5173/oauth2/redirect
+//                    .queryParam("token", token)
+//                    .queryParam("username", username)
+//                    .queryParam("role", role)
+//                    .queryParam("userId", user.getId())
+//                    .encode()
+//                    .build().toUriString();
+//
+//            response.sendRedirect(redirectUrl);
+//            System.out.println("Redirect URL with token: " + redirectUrl);
 
         } else {
             // Trường hợp lỗi: principal không phải kiểu mong đợi
