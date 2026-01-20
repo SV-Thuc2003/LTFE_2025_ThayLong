@@ -41,8 +41,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         }
 
         try {
-            const res = await axios.get(`/api/cart/${userId}`, {
-                headers: {Authorization: `Bearer ${token}`},
+            const res = await axios.get(`cart/${userId}`, {
             });
 
             const rawItems = Array.isArray(res.data)
@@ -79,9 +78,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
                     }
 
                     await axios.post(
-                        `/api/cart/${userId}/add`,
+                        `/cart/${userId}/add`,
                         {productId, quantity},
-                        {headers: {Authorization: `Bearer ${token}`}}
                     );
 
                     fetchCart();
@@ -96,8 +94,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
                     }
 
                     try {
-                        await axios.delete(`/api/cart/${userId}/remove/${cartItemId}`, {
-                            headers: {Authorization: `Bearer ${token}`},
+                        await axios.delete(`/cart/${userId}/remove/${cartItemId}`, {
                         });
 
                         fetchCart();
@@ -124,7 +121,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
                     try {
                         console.log(`🔄 Đang update CartItem ID: ${currentItem.id} - Qty: ${quantity}`);
                         await axios.put(
-                            `/api/cart/${userId}/update`,
+                            `/cart/${userId}/update`,
                             [
                                 {
                                     id: currentItem.id,

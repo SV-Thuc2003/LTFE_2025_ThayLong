@@ -28,8 +28,7 @@ const MyOrders: React.FC = () => {
 
         if (!userId || !token) return;
 
-        axios.get(`/api/orders/user/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
+        axios.get(`/orders/user/${userId}`, {
         })
             .then((res) => setOrders(res.data))
             .catch((err) => console.error("Lỗi tải đơn hàng:", err));
