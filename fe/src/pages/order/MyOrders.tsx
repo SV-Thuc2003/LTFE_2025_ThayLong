@@ -34,6 +34,26 @@ const MyOrders: React.FC = () => {
             .catch((err) => console.error("Lỗi tải đơn hàng:", err));
     }, []);
 
+    const handleCancelOrder = async (orderId: number) => {
+        if (!window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+            return;
+        }
+
+        try {
+            await axios.put(`/orders/cancel/${orderId}`);
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === orderId ? { ...order, status: "Cancelled" } : order
+                )
+            );
+
+            alert("Đã hủy đơn hàng thành công!");
+        } catch (error) {
+            console.error("Lỗi hủy đơn:", error);
+            alert("Không thể hủy đơn hàng. Vui lòng thử lại sau.");
+        }
+    };
+
     const filteredOrders =
         filter === "Tất cả" ? orders : orders.filter((o) => o.status === filter);
 
@@ -100,6 +120,14 @@ const MyOrders: React.FC = () => {
                                     <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-3 min-w-[150px]">
                                         {["Completed", "Cancelled"].includes(order.status) && (
                                             <button className="text-sm px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600 transition">Mua lại</button>
+                                        )}
+                                        {order.status === "Pending" && (
+                                            <button
+                                                onClick={() => handleCancelOrder(order.id)}
+                                                className="text-sm px-4 py-2 bg-gray-200 text-gray-700 border border-gray-300 rounded hover:bg-red-50 hover:text-red-600 hover:border-red-600 transition"
+                                            >
+                                                Hủy đơn
+                                            </button>
                                         )}
                                     </div>
                                 </div>

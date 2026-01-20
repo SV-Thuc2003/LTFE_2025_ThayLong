@@ -70,7 +70,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
       <td className="py-4 border-r border-[#a48c8ca8] px-4">
         <Link
-          to={`/product/${product.slug}`}
+          to={`/product/${product.id}`}
           className="text-[#334862] text-lg font-medium hover:text-rose-600
                      transition block line-clamp-2"
         >
