@@ -108,23 +108,46 @@ public class SecurityConfig {
      *
      * @return CorsConfigurationSource chứa cấu hình CORS
      */
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration();
-//        cho phép nguồn gốc từ React dev server
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "https://milkpowder-shop.onrender.com", "https://ltfe-2025-thay-long-w9pf.vercel.app"));
-//        cho phép các phương thức HTTP  thông dụng
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        cho phép mọi header
-        configuration.setAllowedHeaders(List.of("*"));
-//        cho phép truyền credential  (cookie, header authorization
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // áp dụng cấu hình cho mọi đường dẫn
-        source.registerCorsConfiguration("/**", configuration);
-        return  source;
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "https://*.vercel.app",
+                "https://milkpowder-shop.onrender.com"
+        ));
+
+        configuration.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
+
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration configuration = new CorsConfiguration();
+////        cho phép nguồn gốc từ React dev server
+//        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "https://milkpowder-shop.onrender.com", "https://ltfe-2025-thay-long-w9pf.vercel.app"));
+////        cho phép các phương thức HTTP  thông dụng
+//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+////        cho phép mọi header
+//        configuration.setAllowedHeaders(List.of("*"));
+////        cho phép truyền credential  (cookie, header authorization
+//        configuration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        // áp dụng cấu hình cho mọi đường dẫn
+//        source.registerCorsConfiguration("/**", configuration);
+//        return  source;
+//
+//    }
 
     /**
      * Bean mã hóa mật khẩu sử dụng thuật toán BCrypt
