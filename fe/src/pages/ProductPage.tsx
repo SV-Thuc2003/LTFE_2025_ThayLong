@@ -12,6 +12,7 @@ import ProductFilter from "../components/product/ProductFilter";
 import { CATEGORY_MAP } from "../constants/categories";
 import type { ProductSort } from "../types/product-sort";
 import type { Brand } from "../types/brand";
+import axios from "../Service/axios.ts";
 
 const ProductPage = () => {
   const { categorySlug } = useParams();
@@ -27,13 +28,13 @@ const ProductPage = () => {
   const [sort, setSort] = useState<ProductSort>("newest");
 
   useEffect(() => {
-    fetch("/api/brands", { credentials: "include" }) // gửi cookie cùng request
-      .then((res) => {
-        if (!res.ok) throw new Error("Không thể lấy brands");
-        return res.json();
-      })
-      .then(setBrands)
-      .catch(console.error);
+    axios.get("/brands")
+        .then((res) => {
+          setBrands(res.data);
+        })
+        .catch((err) => {
+          console.error("Lỗi lấy brands:", err);
+        });
   }, []);
 
   const breadcrumbItems: BreadcrumbItem[] = [
