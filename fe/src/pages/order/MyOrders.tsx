@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../Service/axios.ts";
 
 interface ProductItem {
     name: string;

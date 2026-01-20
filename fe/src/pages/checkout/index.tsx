@@ -7,7 +7,7 @@ import QrPayment from "../payment/QrPayment";
 
 import type { CheckoutState, PersonalInfo, ShippingAddress } from "../../types/check-out";
 import type { CartItem } from "../../types/cart";
-import axios from "axios";
+import axios from "../../Service/axios.ts";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart.tsx";
 
