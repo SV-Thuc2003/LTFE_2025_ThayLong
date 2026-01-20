@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../Service/axios"; 
 import {CartContext} from "./CartContext";
 import type {CartItem} from "../types/cart";
 
