@@ -55,6 +55,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []);
 
     useEffect(() => {
+        fetchCart();
     }, [fetchCart]);
     const clearCart = () => {
         setCartItems([]); // Xóa state
