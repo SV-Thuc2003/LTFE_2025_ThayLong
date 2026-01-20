@@ -105,6 +105,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/auth/")
                 || path.startsWith("/oauth2/")
+                || path.startsWith("/ws-chat")
                 || path.startsWith("/api/admin/");
     }
     
