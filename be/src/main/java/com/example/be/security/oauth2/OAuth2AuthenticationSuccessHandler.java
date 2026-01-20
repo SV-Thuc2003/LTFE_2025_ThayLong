@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.io.IOException;
 
@@ -36,59 +37,100 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
      * @throws IOException nếu xảy ra lỗi khi gửi phản hồi
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException {
+
         Object principal = authentication.getPrincipal();
         System.out.println("OAuth2 Principal Class: " + principal.getClass().getName());
 
-        // Kiểm tra xem đối tượng principal có đúng kiểu CustomOAuth2User hay không
+        String email;
+        String username;
+
         if (principal instanceof CustomOAuth2User customUser) {
-            String email = customUser.getEmail();
-            String username = customUser.getName();        // sửa thành getUsername() nếu bạn có
-            String role = customUser.getAuthorities().iterator().next().getAuthority();
-            // Tạo JWT dựa trên email người dùng
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found")); // hoặc AppException nếu bạn dùng sẵn
-            String token = jwtService.generateToken(email, user.getId());
+            // Facebook / OAuth2 thường
+            email = customUser.getEmail();
+            username = customUser.getName();
 
-//            String token = jwtService.generateToken(email);
-            // Log token một phần để tiện debug (không log toàn bộ vì lý do bảo mật)
-            System.out.println("Generated token (partial): " + token.substring(0, 20) + "... (truncated)");
-
-            // Tạo cookie chứa JWT
-            Cookie cookie = new Cookie("jwt", token);
-            cookie.setHttpOnly(true); // chỉ cho phép truy cập từ server (tăng bảo mật)
-            cookie.setSecure(false); // chỉ gửi qua HTTPS
-            cookie.setPath("/"); // Áp dụng cho toàn bộ domain
-            cookie.setMaxAge(60 * 60); // có hiệu lực trong 1 giờ
-            // Thêm cookie vào phản hồi
-            response.addCookie(cookie);
-            // Chuyển hướng về frontend (không truyền token trên URL để bảo mật cao hơn)
-            String redirectUrl =
-                    "https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect"
-                            + "?token=" + token
-                            + "&userId=" + user.getId();
-
-            System.out.println("REDIRECT TO FE = " + redirectUrl);
-            response.sendRedirect(redirectUrl);
-
-//            String redirectUrl = UriComponentsBuilder
-//                    .fromUriString("https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect") // http://localhost:5173/oauth2/redirect
-//                    .queryParam("token", token)
-//                    .queryParam("username", username)
-//                    .queryParam("role", role)
-//                    .queryParam("userId", user.getId())
-//                    .encode()
-//                    .build().toUriString();
-//
-//            response.sendRedirect(redirectUrl);
-//            System.out.println("Redirect URL with token: " + redirectUrl);
+        } else if (principal instanceof OidcUser oidcUser) {
+            // Google OIDC
+            email = oidcUser.getEmail();
+            username = oidcUser.getFullName();
 
         } else {
-            // Trường hợp lỗi: principal không phải kiểu mong đợi
-            System.err.println("Unexpected principal: " + principal.getClass().getName());
-            response.sendRedirect(appProperties.getOauth2().getRedirectUri() + "?error=OAuth2PrincipalMismatch");
+            throw new RuntimeException("Unsupported principal: " + principal.getClass());
         }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = jwtService.generateToken(email, user.getId());
+
+        String redirectUrl =
+                "https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect"
+                        + "?token=" + token
+                        + "&userId=" + user.getId();
+
+        System.out.println("REDIRECT TO FE = " + redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
+
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+//        Object principal = authentication.getPrincipal();
+//        System.out.println("OAuth2 Principal Class: " + principal.getClass().getName());
+//
+//        // Kiểm tra xem đối tượng principal có đúng kiểu CustomOAuth2User hay không
+//        if (principal instanceof CustomOAuth2User customUser) {
+//            String email = customUser.getEmail();
+//            String username = customUser.getName();        // sửa thành getUsername() nếu bạn có
+//            String role = customUser.getAuthorities().iterator().next().getAuthority();
+//            // Tạo JWT dựa trên email người dùng
+//            User user = userRepository.findByEmail(email)
+//                    .orElseThrow(() -> new RuntimeException("User not found")); // hoặc AppException nếu bạn dùng sẵn
+//            String token = jwtService.generateToken(email, user.getId());
+//
+////            String token = jwtService.generateToken(email);
+//            // Log token một phần để tiện debug (không log toàn bộ vì lý do bảo mật)
+//            System.out.println("Generated token (partial): " + token.substring(0, 20) + "... (truncated)");
+//
+//            // Tạo cookie chứa JWT
+//            Cookie cookie = new Cookie("jwt", token);
+//            cookie.setHttpOnly(true); // chỉ cho phép truy cập từ server (tăng bảo mật)
+//            cookie.setSecure(false); // chỉ gửi qua HTTPS
+//            cookie.setPath("/"); // Áp dụng cho toàn bộ domain
+//            cookie.setMaxAge(60 * 60); // có hiệu lực trong 1 giờ
+//            // Thêm cookie vào phản hồi
+//            response.addCookie(cookie);
+//            // Chuyển hướng về frontend (không truyền token trên URL để bảo mật cao hơn)
+//            String redirectUrl =
+//                    "https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect"
+//                            + "?token=" + token
+//                            + "&userId=" + user.getId();
+//
+//            System.out.println("REDIRECT TO FE = " + redirectUrl);
+//            response.sendRedirect(redirectUrl);
+//
+////            String redirectUrl = UriComponentsBuilder
+////                    .fromUriString("https://ltfe-2025-thay-long-w9pf.vercel.app/oauth2/redirect") // http://localhost:5173/oauth2/redirect
+////                    .queryParam("token", token)
+////                    .queryParam("username", username)
+////                    .queryParam("role", role)
+////                    .queryParam("userId", user.getId())
+////                    .encode()
+////                    .build().toUriString();
+////
+////            response.sendRedirect(redirectUrl);
+////            System.out.println("Redirect URL with token: " + redirectUrl);
+//
+//        } else {
+//            // Trường hợp lỗi: principal không phải kiểu mong đợi
+//            System.err.println("Unexpected principal: " + principal.getClass().getName());
+//            response.sendRedirect(appProperties.getOauth2().getRedirectUri() + "?error=OAuth2PrincipalMismatch");
+//        }
+//    }
 }
 
 
